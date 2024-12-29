@@ -18,18 +18,22 @@ const listingSchema = new schema({
     }, 
     description: {
         type: String,
-        },
-    image: {
-        type: Object,
-        default: "C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg",
-        set: (v)=> v ===""?"C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg": v
+    },
+    price: {
+            type: Number
     },
     location: {
         type: String
     },
     country: {
         type: String
-    }
+    },
+    image: {
+        type: Object,
+        default: "C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg",
+        set: (v)=> v ===""?"C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg": v
+    },
+    
 });
 
 const listing = mongoose.model("listing", listingSchema);

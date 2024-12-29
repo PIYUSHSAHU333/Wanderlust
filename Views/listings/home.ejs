@@ -8,10 +8,15 @@
 <body>
 
     <h1>All listings</h1>
-
+    <a href="/listings/new"><button>Add</button></a>
     <ul>
    <% for (let list of allListings){ %>
        <li> <a href="/listings/<%= list._id %>"><%= list.title %></a> </li>
+       <br>
+       
+       <form action="/listings/<%= list._id %>?_method=DELETE" method="post">
+        <button>Delete</button>
+       </form>
    <%  } %>
 </ul>
 </body>

@@ -11,39 +11,29 @@ body{
 .navbar{
     height: 5rem;
     z-index: 1;
-    background-color: #222222;
+    background-color: white;
 
 }
-
 .navbar-nav a{
-    color: white !important;
+    padding-right: 2rem !important;
+    /* padding: 0.5rem 1rem !important; */
+    box-sizing: border-box !important;
+    border-radius: 50px !important;
+    opacity: 0.85;
+    
 }
- .collapse1{
-    background-color:#222222 !important;
-    padding-left: 1rem;
-    margin-top: 3px;
-    border-top: solid #fe424d 5px; 
-    border-left: solid #fe424d 5px ;
-}
-.collapse1 a{
-    opacity: 0.8;
-}
-.collapse1 a:hover {
+.navbar-nav a:hover{
+    
     opacity: 1;
-    text-decoration: underline;
-    /* display: inline-block; */
-  /* padding: 10px 20px; */
-  /* margin-left: 2px;
-  color: white;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.1); /* Initial transparent background */
-  /* border: 1px solid rgba(255, 255, 255, 0.2); Light border */
-  
-  /* border-top-right-radius:2.3rem; */
-  /* transition: all 0s ease; Smooth transition */
-  backdrop-filter: blur(0px); /* No blur initially */
-  object-fit: cover; 
+    background-color: rgba(245, 245, 245, 0.5) !important;
+    border: none !important; 
+   
+    
 }
+
+
+
+
 
 .nav-link {
     color: #222222 !important;

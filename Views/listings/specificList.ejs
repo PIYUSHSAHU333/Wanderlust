@@ -1,19 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= specificList.title %></title>
-</head>
+<% layout('./layouts/layouts.ejs') -%>
 <body>
-    <h3>Listing details</h3>
-    <h1><%= specificList.title %></h1>
-    <ul>
-        <li><%= specificList.description %></li>
-        <li>  &#8377;<%= specificList.price.toLocaleString("en-in") %></li>
-        <li><%= specificList.location %></li>
-        <li><%= specificList.country %></li>
-    </ul>
-    <a href="/listing/<%= specificList._id %>/update"><Button>update</Button></a>
+    
+
+    <div class="row">
+      <div class="col-6 offset-3">
+        <div class="card mt-3" >
+          <img src="<%=specificList.image.url%>" class="card-img-top show-img mb-3" alt="image">
+          <div class="card-body">
+            <h5 class="card-title"> <b><%= specificList.title %></b></h5>
+            <p class="card-text show-pc">
+              <%= specificList.description %> <br>
+              &#8377;<%= specificList.price.toLocaleString("en-IN") %> <br>
+              <%= specificList.location %> <br>
+              <%= specificList.country %> <br>
+            </p>
+          </div>
+        </div>
+        <div class="btns-show">
+              <a href="/listing/<%= specificList._id %>/update" class="col-2  btn btn-dark mb-3 btn-specificList">Edit</a> 
+                <form action="/listings/<%= specificList._id %>?_method=DELETE" class="" method="post">
+                    <button class="btn btn-dark btn-specificList offset-3">Delete</button>
+                </form>
+        </div>
+        
+     </div>
+  </div>
+    
+
+   
+    
 </body>
-</html>

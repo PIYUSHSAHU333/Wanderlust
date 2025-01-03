@@ -1,23 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanderlust</title>
-</head>
+<% layout('./layouts/layouts.ejs') -%>
 <body>
 
-    <h1>All listings</h1>
-    <a href="/listings/new"><button>Add</button></a>
-    <ul>
-   <% for (let list of allListings){ %>
-       <li> <a href="/listings/<%= list._id %>"><%= list.title %></a> </li>
-       <br>
-       
-       <form action="/listings/<%= list._id %>?_method=DELETE" method="post">
-        <button>Delete</button>
-       </form>
-   <%  } %>
-</ul>
+    <h1>All Listings</h1>
+    <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1">
+            <% for (let list of allListings){ %>
+                <a href="/listings/<%= list._id %>" class="listClick">
+                    <div class="card col">
+                            <img src="<%= list.image.url %>" class="card-img-top" alt="Listing image" style="height: 20rem">
+                            <div class="card-img-overlay">
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text ">
+                                   <b> <%= list.title %> </b>
+                                    <br>
+                                &#8377;<%= list.price.toLocaleString("en-IN") %> / night
+                                </p>
+                            </div>
+                            
+                    </div>
+                </a>
+            <%  } %>
+     </div>
+
 </body>
-</html>
+

@@ -6,12 +6,14 @@ const Listing = require("./models/listing");
 const { title } = require("process");
 const { url } = require("inspector");
 const methodOverride = require('method-override')
-
+const ejsMate = require("ejs-mate");
 //-----------------------------------------
 app.set("Views", path.join(__dirname, "Views"));
 app.set("Views engine", "ejs");
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'))
+app.engine('ejs', ejsMate);
+app.use(express.static(path.join(__dirname, "/public")));
 //-----------------------------------------
 
 main()
@@ -29,6 +31,11 @@ async function main() {
 
 //--------------------------
 //Listing route 
+//root 
+app.get("/", (req, res)=>{
+    res.send("Hi, I am root!");
+});
+//show route
 app.get("/listings",  async (req, res)=>{
    let allListings = await Listing.find({})
    res.render("listings/home.ejs", {allListings});
@@ -81,7 +88,7 @@ app.delete("/listings/:id", async (req, res)=>{
     console.log(listing);
     res.redirect("/listings");
 
-})
+});
 
 
 //-----------------------

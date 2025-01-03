@@ -1,25 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanderlust | update</title>
-</head>
+<% layout('./layouts/layouts.ejs') -%>
 <body>
     <form action="/listing/<%= listing._id %>?_method=PUT" method="post">
+ <div class="row mt-3 ">
+    <div class="col-6 offset-3">
+        <div class="title mt-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control">
+        </div>
+        
+        <div class="location mt-3">
+            <label for="title" class="form-label">Location</label>
+            <input type="text" name="listing[location]" value="<%= listing.location %>" class="form-control">
+        </div>
 
-        <input type="text" name="listing[title]" value="<%= listing.title %>">
-        <br> <br>
-        <input type="text" name="listing[location]" value="<%= listing.location  %>">
-        <br> <br>
-        <input type="text" name="listing[country]" value="<%= listing.country %>">
-        <br> <br>
-        <input type="number" name="listing[price]" value="<%= listing.price %>">
-        <br> <br>
-        <textarea type="text" name="listing[description]" ><%= listing.description %></textarea>
-        <button>Edit</button>
-
-
+            <div class="row">
+                <div class="country mt-3 col-md-3">
+                    <label for="title" class="form-label">Country</label>
+                    <input type="text" name="listing[country]" value="<%= listing.country %>" class="form-control">
+                </div>
+                
+                <div class="price mt-3 col-md-3" >
+                    <label for="title" class="form-label">Price</label>
+                    <input type="text" name="listing[price]" value="<%= listing.price %>" class="form-control">
+                </div>
+            </div>
+        
+        
+        <div class="description mt-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea type="text" class="form-control" name="listing[description]" ><%= listing.description %></textarea>
+        </div>
+        
+        <button class="btn btn-dark mt-5 edit-btn">Update</button>
+    </div>
+ </div>
+   
     </form>
 </body>
-</html>

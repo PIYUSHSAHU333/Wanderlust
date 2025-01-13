@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-6 offset-3">
         <div class="card mt-3" >
-          <img src="<%=specificList.image.url%>" class="card-img-top show-img mb-3" alt="image">
+          <img src="<%= typeof specificList.image === 'object' ? specificList.image.url: specificList.image%>" class="card-img-top show-img mb-3" alt="image">
           <div class="card-body">
             <h5 class="card-title"> <b><%= specificList.title %></b></h5>
             <p class="card-text show-pc">

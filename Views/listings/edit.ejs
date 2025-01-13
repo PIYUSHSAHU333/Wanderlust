@@ -1,39 +1,58 @@
 <% layout('./layouts/layouts.ejs') -%>
 <body>
-    <form action="/listing/<%= listing._id %>?_method=PUT" method="post">
- <div class="row mt-3 ">
-    <div class="col-6 offset-3">
+    <form action="/listing/<%= listing._id %>?_method=PUT" method="post" class="needs-validation" novalidate>
+       <div class="row mt-3 ">
+     <div class="col-6 offset-3">
         <div class="title mt-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control">
+            <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
+
+            <div class="invalid-feedback">Please enter a title</div>
         </div>
         
         <div class="location mt-3">
             <label for="title" class="form-label">Location</label>
-            <input type="text" name="listing[location]" value="<%= listing.location %>" class="form-control">
+            <input type="text" name="listing[location]" value="<%= listing.location %>" class="form-control" required>
+
+            <div class="invalid-feedback">Please enter a valid location</div>
         </div>
+
+            <div class="image">
+                <label for="image" class="form-label">Image</label>
+                <input type="text" class="form-control" required name="listing[image]" value="<%= typeof listing.image === 'object' ? listing.image.url : listing.image %>" >
+                
+                <div class="invalid-feedback">Please enter a valid image url/link</div>
+
+            </div>
 
             <div class="row">
                 <div class="country mt-3 col-md-3">
                     <label for="title" class="form-label">Country</label>
-                    <input type="text" name="listing[country]" value="<%= listing.country %>" class="form-control">
+                    <input type="text" name="listing[country]" value="<%= listing.country %>" class="form-control " required>
+
+                    <div class="invalid-feedback">Please enter a valid country name</div>
                 </div>
                 
                 <div class="price mt-3 col-md-3" >
-                    <label for="title" class="form-label">Price</label>
-                    <input type="text" name="listing[price]" value="<%= listing.price %>" class="form-control">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="text" name="listing[price]" value="<%= listing.price %>" class="form-control " required>
+
+                    <div class="invalid-feedback">Please enter a valid price</div>
                 </div>
             </div>
         
         
         <div class="description mt-3">
             <label for="description" class="form-label">Description</label>
-            <textarea type="text" class="form-control" name="listing[description]" ><%= listing.description %></textarea>
+            <textarea type="text" class="form-control " name="listing[description]" required><%= listing.description %></textarea>
+
+            <div class="invalid-feedback">Please enter a valid description</div>
         </div>
         
         <button class="btn btn-dark mt-5 edit-btn">Update</button>
-    </div>
- </div>
+        <br> <br>
+       </div>
+      </div>
    
     </form>
 </body>

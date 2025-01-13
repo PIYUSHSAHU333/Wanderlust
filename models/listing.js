@@ -18,9 +18,10 @@ const listingSchema = new schema({
     }, 
     description: {
         type: String,
+        require: true
     },
     price: {
-            type: Number
+         type: Number
     },
     location: {
         type: String
@@ -30,8 +31,9 @@ const listingSchema = new schema({
     },
     image: {
         type: Object,
-        default: "C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg",
-        set: (v)=> v ===""?"C:\Users\piyus\majorProject\MAJORPROJECT\holly-7590229_1280.jpg": v
+        default: "/images/holly-7590229_1280.jpg",
+        set: (v) => (v === "" ? "/images/holly-7590229_1280.jpg" : v), //ask gpt
+
     },
     
 });

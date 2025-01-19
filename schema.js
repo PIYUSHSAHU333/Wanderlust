@@ -9,4 +9,11 @@ module.exports.listingSchema = joi.object({
     price: joi.number().required().min(0),
     image: joi.string().required().allow("", null)
 }).required()
+});
+
+module.exports.reviewSchema = joi.object({
+    review: joi.object({
+        Comment: joi.string().required(),
+        rating: joi.number().required().min(1).max(5)
+    }).required()
 })

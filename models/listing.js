@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
-
+const review = require("./reviews");
 main().then((res=>{
     console.log("Mongoose connected");
 }))
@@ -35,7 +35,18 @@ const listingSchema = new schema({
         set: (v) => (v === "" ? "/images/holly-7590229_1280.jpg" : v), //ask gpt
 
     },
-    
+    review: [
+        {
+            type: schema.Types.ObjectId,
+            ref: "Review",
+        }
+    ]
+});
+
+listingSchema.post("findOneAndDelete", async(listing)=>{
+    if(listing){
+        await review.deleteMany({_id:{ $in: listing.review}});
+    }
 });
 
 const listing = mongoose.model("listing", listingSchema);

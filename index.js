@@ -7,7 +7,26 @@ const { title } = require("process");
 const { url } = require("inspector");
 const methodOverride = require('method-override')
 const ejsMate = require("ejs-mate");
+const flash = require("connect-flash");
+const session = require("express-session");
+const sessionOption = {
+    secret: "evictionno.4",
+    saveUninitialized: true,
+    resave: false,
+    cookie: {
+        expire: Date.now() + 7 * 24 * 60 * 60 * 1000, //In milliseconds
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true
+    }
+};
+app.use(session(sessionOption));
+app.use(flash());
 
+app.use((req, res, next)=>{
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
 const listings = require("./routes/listings.js");
 const reviews = require("./routes/reviews.js");
 

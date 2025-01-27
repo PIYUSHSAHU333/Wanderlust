@@ -40,6 +40,7 @@ router.get("/testListing", asyncWrap (async (req, res)=>{
 
 //New route
 router.get("/new", (req, res)=>{
+    req.session.name = "rahul";
     res.render("listings/new.ejs");
 });
 
@@ -49,14 +50,20 @@ router.post("/",
     asyncWrap( async (req, res, next)=>{
     let newListing =  new Listing(req.body.listing);
     await newListing.save();
+    req.flash("success", "New Listing Created");
     res.redirect("/listings");
 })
 );
 
 //show route (read)
 router.get("/:id", asyncWrap (async (req, res)=>{
+    // console.log(req.session);
     let {id} = req.params;
     let specificList = await Listing.findById(id).populate("review");
+    if(!specificList){
+        req.flash("error", "Listing you requested for does not exists!");
+        res.redirect("/listings");
+    }
     res.render("listings/specificList.ejs", {specificList});
 }));
 
@@ -64,6 +71,10 @@ router.get("/:id", asyncWrap (async (req, res)=>{
 router.get("/:id/update", asyncWrap (async (req, res)=>{
     let {id} = req.params;
     let listing = await Listing.findById(id);
+    if(!listing){
+        req.flash("error", "Listing you requested for does not exists!");
+        res.redirect("/listings");
+    }
     res.render("listings/edit.ejs", {listing});
 }));
 
@@ -73,6 +84,8 @@ router.put("/:id",
     asyncWrap (async (req, res)=>{
     let {id} = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing})// just ask chatGpt 
+
+    req.flash("success", "Listing Updated Successfuly");
     res.redirect("/listings");
 })
 );
@@ -82,6 +95,7 @@ router.delete("/:id", asyncWrap (async (req, res)=>{
     let {id} = req.params;
     let listing = await Listing.findByIdAndDelete(id); //also when we'll delete a listing, then post query middleware will be running which we've set to delete related reviews in review db in listing.js
     console.log(listing);
+    req.flash("success", "Listing Deleted Successfuly");
     res.redirect("/listings");
 }));
 

@@ -1,0 +1,34 @@
+<% layout('./layouts/layouts.ejs') -%>
+
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+        <h1>Login for Wanderlust</h1>
+        <form action="/login" method="post" class="needs-validation" novalidate>
+            <div class="username mb-3">
+                <label for="username"  class="form-label">Username</label>
+                <input 
+                type="text"
+                placeholder="Enter your Username" 
+                name="username"
+                class="form-control"
+                required >
+                <div class="invalid-feedback">Please enter a Username</div>
+            </div>
+
+            <div class="password mb-3">
+                <label for="password"  class="form-label">password</label>
+                <input 
+                type="password"
+                placeholder="set a password" 
+                name="password"
+                class="form-control"
+                required >
+                <div class="invalid-feedback">Please enter your password</div>
+            
+            </div>
+
+            <button class="btn btn-success">Login</button>
+
+        </form>
+    </div>
+</div>

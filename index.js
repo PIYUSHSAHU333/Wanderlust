@@ -9,6 +9,9 @@ const methodOverride = require('method-override')
 const ejsMate = require("ejs-mate");
 const flash = require("connect-flash");
 const session = require("express-session");
+const LocalStrategy = require("passport-local");
+const passport = require("passport");
+const user = require("./models/users.js");
 const sessionOption = {
     secret: "evictionno.4",
     saveUninitialized: true,
@@ -22,14 +25,22 @@ const sessionOption = {
 app.use(session(sessionOption));
 app.use(flash());
 
+app.use(passport.initialize());//important: initializes our passport tool
+app.use(passport.session());//important: passport.session() stores user login information in the session, so they don’t have to log in again on every req in one session.
+//(ask ChatGpt: "Explain in simpler terms") ps: for my own future understanding:) ;
+passport.use(new LocalStrategy(user.authenticate()));// This authenticate which is a static method under passport-local-mongoose will check if our user has a correct password and usename, This is a method for localstrategy only.
+
+passport.serializeUser(user.serializeUser()); //stores info for a user in one session(serialising the user)
+passport.deserializeUser(user.deserializeUser()); //removes the info of user when session ends(deserialising user);
+
 app.use((req, res, next)=>{
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     next();
 });
-const listings = require("./routes/listings.js");
-const reviews = require("./routes/reviews.js");
-
+const listingsRouter = require("./routes/listings.js");
+const reviewsRouter = require("./routes/reviews.js");
+const userRouter = require("./routes/users.js");
 //-----------------------------------------
 app.set("Views", path.join(__dirname, "Views"));
 app.set("Views engine", "ejs");
@@ -54,9 +65,19 @@ async function main() {
 
 //Routes:-
 
+// app.get("/demouser", async(req, res)=>{
+//     let fakeUser = new user({
+//         email: "abeltesafaye@hut.in",
+//         username: "The Weeknd" //passport-local-mongoose will automatically create this field in userSchema & for passwords well
+//     });
+//     let registeredUser = await user.register(fakeUser, "hurryuptomorrow"); //saves new user with salting and hashed password in mongoose (yes sir you heard it right, no need of user.save() and all shit)
+//     res.send(registeredUser);
+// });
+
 //listing and review routes(using routers)
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", userRouter);
 
 //!!--Invalid route handler--!!
 app.use((req, res, next)=>{

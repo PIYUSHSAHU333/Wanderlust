@@ -3,9 +3,11 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+
 }
 .container{
     flex: 1;
+    overflow: hidden;
 }
 
 .navbar{
@@ -74,10 +76,14 @@ body{
     border-radius: 1rem !important;
 
 }
+
+
 .Listingcard{
     border: none !important;
     margin-bottom: 2rem;
 }
+
+
 .card-body{
     padding: 0 !important;
 }
@@ -129,9 +135,45 @@ body{
 .btns-show{
     display: flex !important;
 }
+
+@media screen and (max-width: 772px) {
+    
+}
+
 .btns-show a:hover{
     background-color: #222222 !important;
 }
 .btns-show button:hover{
     background-color: rgb(201, 43, 43) !important;
 }
+
+/* alert */
+.alert {
+    max-width: 65%;
+    margin: 10px auto;  /* Centers alert properly */
+    font-size: 1rem;
+    padding: 12px 15px;
+  }
+
+ /* map */
+#map{
+    height: 400px;
+    width: 100%;
+}
+.map{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 280px;
+}
+
+ /* marker-popup */
+
+/* Remove default white background */
+.mapboxgl-popup-content {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 const review = require("./reviews");
+const { string, required, number } = require("joi");
 main().then((res=>{
     console.log("Mongoose connected");
 }))
@@ -8,17 +9,17 @@ main().then((res=>{
     console.log(err);
 })
 async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust");
+    await mongoose.connect(process.env.ATLASDB_URL);
 }
 
 const listingSchema = new schema({
     title: {
         type: String,
-        require: true
+        required: true
     }, 
     description: {
         type: String,
-        require: true
+        required: true
     },
     price: {
          type: Number
@@ -30,17 +31,39 @@ const listingSchema = new schema({
         type: String
     },
     image: {
-        type: Object,
-        default: "/images/holly-7590229_1280.jpg",
-        set: (v) => (v === "" ? "/images/holly-7590229_1280.jpg" : v), //ask gpt
+        url: String, //image field automatically becomes object bc it has two keys url and filename
+        filename: String
 
+        // type: Object,
+        // default: "/images/holly-7590229_1280.jpg",
+        // set: (v) => (v === "" ? "/images/holly-7590229_1280.jpg" : v), //ask gpt
     },
     review: [
         {
             type: schema.Types.ObjectId,
             ref: "Review",
         }
-    ]
+    ],
+    owner: {
+        type: schema.Types.ObjectId,
+        ref: "User",
+    },
+    geometry:{
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates:{ 
+            type: [Number],
+            required: true
+        }
+    },
+    category: {
+        type: String,
+        enum: ["Mountains", "Trending", "Castles", "Farms", "Rooms", "Pools", "Arctic", "Amazing cities", "Camping", "Domes", "Boats"],
+        required: true
+    }
 });
 
 listingSchema.post("findOneAndDelete", async(listing)=>{

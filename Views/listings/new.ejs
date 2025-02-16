@@ -1,58 +1,123 @@
 <% layout('./layouts/layouts.ejs') -%>
 <body>
-    
+        
     <div class="row">
         <div class="col-8 offset-2">
-            <br> <br>
-    <form action="/listings" method="post" novalidate class="needs-validation">
-        <h2>Create a new listing</h2> <br>
-        <div class="title mb-3">
-            <label for="title"  class="form-label">Title</label>
-            <input type="text" placeholder="Enter a catchy Title" name="listing[title]" class="form-control"required >
+                <br><br>
+            <form action="/listings" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
+                    <h2>Create a new listing</h2> <br>
+                    <div class="title mb-3">
+                        <label for="title"  class="form-label">Title</label>
+                        <input type="text" placeholder="Enter a catchy Title" name="listing[title]" class="form-control"required >
 
-            <div class="invalid-feedback">Please enter a title</div>
-        </div>
+                        <div class="invalid-feedback">Please enter a title</div>
+                    </div>
 
-        <div class="description mb-3">
-            <label for="descriptions" class="form-label">Description</label>
-            <textarea type="text" class="form-control" name="listing[description]"required></textarea>
+                    <div class="description mb-3">
+                        <label for="descriptions" class="form-label">Description</label>
+                        <textarea type="text" class="form-control" name="listing[description]"required></textarea>
 
-            <div class="invalid-feedback">Please enter a description</div>
-        </div>
+                        <div class="invalid-feedback">Please enter a description</div>
+                    </div>
 
-        <div class="location mb-3">
-            <label for="location" class="form-label">Location</label>
-            <input type="text" name="listing[location]"  placeholder="Jaipur, Rajasthan" class="form-control"required>
+                    <div class="location mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" name="listing[location]"  placeholder="Jaipur, Rajasthan" class="form-control"required>
 
-            <div class="invalid-feedback">Please enter a valid location</div>
-        </div>
+                        <div class="invalid-feedback">Please enter a valid location</div>
+                    </div>
+                    
+                    <div class="image mb-3">
+                        <label for="image" class="form-label">Upload Listing image</label>
+                        <input type="file" name="listing[image]"  class="form-control" >
+
+                        <div class="invalid-feedback">Please Upload a image</div>
+                    </div>
+
+                <div class="row">
+                    <div class="country mb-3 col-md-4">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" name="listing[country]"  placeholder="India" class="form-control" required>
+
+                        <div class="invalid-feedback">Please enter a valid country name</div>
+                    </div>
+                    
+                    <div class="price mb-3 col-md-3">
+                        <label for="price" class="form-label" >Price</label>
+                        <input  type="number" class="form-control" placeholder="1200" name="listing[price]" required>
+
+                        <div class="invalid-feedback">Please enter a valid price</div>
+                    </div>
+                </div>  
+                
+                
+                    <div class="radios">
+                        <h6>Please select a suitable category for your Airbnb</h6>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="mountains" value="Mountains" required>
+                            <label class="form-check-label" for="mountains">Mountains</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="trending" value="Trending">
+                            <label class="form-check-label" for="trending">Trending</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="castles" value="Castles">
+                            <label class="form-check-label" for="castles">Castles</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="farms" value="Farms">
+                            <label class="form-check-label" for="farms">Farms</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="rooms" value="Rooms">
+                            <label class="form-check-label" for="rooms">Rooms</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="pools" value="Pools">
+                            <label class="form-check-label" for="pools">Pools</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="arctic" value="Arctic">
+                            <label class="form-check-label" for="arctic">Arctic</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="amazing-cities" value="Amazing cities">
+                            <label class="form-check-label" for="amazing-cities">Amazing cities</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="camping" value="Camping">
+                            <label class="form-check-label" for="camping">Camping</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="domes" value="Domes">
+                            <label class="form-check-label" for="domes">Domes</label>
+                        </div>
+                
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listing[category]" id="boats" value="Boats">
+                            <label class="form-check-label" for="boats">Boats</label>
+                        </div>
+                
+                        <div class="invalid-feedback">Please select a category</div>
+                    </div>
+                    
         
-        <div class="image mb-3">
-            <label for="image" class="form-label">image</label>
-            <input type="text" name="listing[image]" placeholder="Enter image URL/Link" class="form-control" >
-        </div>
+                
 
-    <div class="row">
-        <div class="country mb-3 col-md-4">
-            <label for="country" class="form-label">Country</label>
-            <input type="text" name="listing[country]"  placeholder="India" class="form-control" required>
-
-            <div class="invalid-feedback">Please enter a valid country name</div>
+                <br><br>
+                <button class="btn btn-dark add-btn">Add</button> <br> <br>
+            </form>
         </div>
-        
-        <div class="price mb-3 col-md-3">
-            <label for="price" class="form-label" >Price</label>
-            <input  type="number" class="form-control" placeholder="1200" name="listing[price]" required>
-
-            <div class="invalid-feedback">Please enter a valid price</div>
-        </div>
-    </div>   
-    
-    <br> <br>
-    <button class="btn btn-dark add-btn">Add</button>
-    <br> <br>
-    </form>
-    
-</div>
-</div>
+    </div>
 </body>

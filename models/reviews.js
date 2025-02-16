@@ -8,7 +8,7 @@ main().then((res=>{
     console.log(err);
 })
 async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust");
+    await mongoose.connect(process.env.ATLASDB_URL);
 }
 
 const reviewSchema = new schema({
@@ -21,6 +21,10 @@ const reviewSchema = new schema({
     createdAt: {
         type: Date,
         default: Date.now()
+    },
+    author: {
+        type: schema.Types.ObjectId,
+        ref: "User"
     }
 });
 

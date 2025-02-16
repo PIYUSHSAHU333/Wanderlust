@@ -3,43 +3,26 @@ const router = express.Router({mergeParams: true});
 const user = require("../models/users");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
+const { saveRedirectUrl } = require("../middlewares");
+const userController = require("../controllers/users");
 
-router.get("/signup",(req, res)=>{
-    res.render("./users/signup.ejs");
-})
+//for signup form and to signup(post)
+router.route("/signup")
+.get(userController.renderSignupForm)
+.post(wrapAsync(userController.signup))
 
-router.post("/signup", wrapAsync( async(req, res)=>{
-
-    try{
-        let {username, email, password} = req.body;
-    let newUser = new user({
-        email: email,
-        username: username
-    });
-    let registeredUser =  await user.register(newUser, password);
-    console.log(registeredUser);
-    req.flash("success", "Welcome to wanderlust!")
-    res.redirect("/listings")
-    }catch(e){
-        req.flash("error", e.message); //we here, also put try and catch because, if there's a error so with asyncWrap we'll be on some lost page but with try and catch we'll be as here programmed be redirected to same page with flash message be seen on same page, most probable error can be that username already exists
-        res.redirect("/signup");
-    }
-    
-}));
-
-router.get("/login", (req, res)=>{
-    res.render("./users/login.ejs");
-});
-
-router.post("/login",
-   passport.authenticate('local', //authenticates if the username and password exixts in db or not(we don't need to even access req.body everything is done by passport itself);
+//for login form and to login(post)
+router.route("/login")
+.get(userController.renderLoginForm)
+.post( saveRedirectUrl, //Now, what happens is that once our user is logged in, our session gets reset bc of passport's properties! so we call this new mw in which before the user is authenticated or logged in, we're saving the redirectUrl from req.session before it getting reset in res.locals to which passport doesnt have access
+    passport.authenticate('local', //authenticates if the username and password exixts in db or not(we don't need to even access req.body everything is done by passport itself);
     {failureRedirect: '/login', //always remember, passport relies on session id(from express sessions here) for storing reliable info of the user for one session
     failureFlash: true
     }), //ask chatgpt 
-     wrapAsync (async(req, res)=>{
-    req.flash("success", "Welcome back to Wanderlust:)");
-    res.redirect("/listings");
-}));
+    wrapAsync (userController.login))
+
+//for logging out
+router.get("/logout", userController.logout);
 
 
 

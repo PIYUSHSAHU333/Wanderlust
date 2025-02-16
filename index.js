@@ -1,8 +1,15 @@
+if(process.env.NODE_ENV != "producton"){
+    require("dotenv").config()
+}
+console.log(process.env.CLOUD_NAME); //cloud_name is a key in our .env file which can be only accesed with the help of 'dotenv' package
+
+
 const express = require("express");
 const ExpressErr = require("./utils/ExpressErr.js");
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo');
 const { title } = require("process");
 const { url } = require("inspector");
 const methodOverride = require('method-override')
@@ -12,8 +19,25 @@ const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const passport = require("passport");
 const user = require("./models/users.js");
+const dbUrl = process.env.ATLASDB_URL;
+
+let store = MongoStore.create( //some imp options for connect-mongo
+    {
+        mongoUrl: dbUrl, //link toactual db (actually connect-mongo allows exp-sessions to store session info in Atlas and not in local memory | it's a via)
+        crypto: {
+            secret: process.env.SECRETSTORE
+          },
+        touchAfter: 24 * 3600 //helps session not to get update on every request (like just clicking on link to have access to fb)-not related to login/logout or something
+    }
+)
+
+store.on("error", ()=>{
+    console.log("ERROR IN MONGOOSE SESSION STORE", err);
+})
+
 const sessionOption = {
-    secret: "evictionno.4",
+    store, //telling our express session to use connect-mongo for storing session info and local device
+    secret: process.env.SECRET,
     saveUninitialized: true,
     resave: false,
     cookie: {
@@ -22,6 +46,8 @@ const sessionOption = {
         httpOnly: true
     }
 };
+
+
 app.use(session(sessionOption));
 app.use(flash());
 
@@ -34,8 +60,9 @@ passport.serializeUser(user.serializeUser()); //stores info for a user in one se
 passport.deserializeUser(user.deserializeUser()); //removes the info of user when session ends(deserialising user);
 
 app.use((req, res, next)=>{
-    res.locals.success = req.flash("success");
+    res.locals.success = req.flash("success"); //we can access res.locals.success in ejs tempelate now 
     res.locals.error = req.flash("error");
+    res.locals.currUser = req.user; //don't be confused, In an Express app, req.user is typically assigned by Passport.js, which is a middleware for authentication. Now we can access currUser in ejs temeplates as well unlike req object(as it's not accessible for ejs tempelates)
     next();
 });
 const listingsRouter = require("./routes/listings.js");
@@ -44,7 +71,7 @@ const userRouter = require("./routes/users.js");
 //-----------------------------------------
 app.set("Views", path.join(__dirname, "Views"));
 app.set("Views engine", "ejs");
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true})); //parses url encoded data from form to js objects
 app.use(methodOverride('_method'))
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -59,8 +86,9 @@ main()
     console.log(err);
 })
 
+
 async function main() {
-    await mongoose.connect("mongodb://127.0.0.1:27017/Wanderlust");
+    await mongoose.connect(process.env.ATLASDB_URL);
 }
 
 //Routes:-

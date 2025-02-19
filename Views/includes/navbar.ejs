@@ -35,8 +35,8 @@
 
 
         <div class="navbar-nav ms-auto ">
-          <form class="d-flex" role="search">
-            <input class="form-control me-2 search-inp " type="search" placeholder="Search Destinations" aria-label="Search">
+          <form class="d-flex" id="searchBar" role="search" action="/listings/search" method="get">
+            <input class="form-control me-2 search-inp" id="searchquery" type="search" placeholder="Search Destinations" aria-label="Search">
             <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass " style="display: inline;"></i >Search</button>
           </form>
         </div>
@@ -54,3 +54,19 @@
       </div>
     </div>
   </nav>
+
+  <script>
+
+    document.getElementById("searchBar").addEventListener("submit", async(event)=>{
+      event.preventDefault();
+
+      let query = document.getElementById("searchquery").value;
+      if(!query){
+        return;
+      }else{
+      window.location.href = `/listings/search?query=${encodeURIComponent(query)}`;
+      }
+    })
+    
+
+  </script>

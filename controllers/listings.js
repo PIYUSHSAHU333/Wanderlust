@@ -109,6 +109,18 @@ module.exports.filter = async (req, res)=>{
     let {category} = req.params;
     console.log(category);
     let filteredListings = await Listing.find({category: category}); 
-    console.log("-----",filteredListings,"-----");
+    // console.log("-----",filteredListings,"-----");
     res.render("listings/filters.ejs", {filteredListings});
+}
+module.exports.search = async(req, res)=>{
+    let {query} = req.query;
+    let listings = await Listing.find({
+        $or: [
+            {title: {$regex: query, $options: 'i'}},
+            {location: {$regex: query, $options: 'i'}},
+            {description: {$regex: query, $options: 'i'}}
+        ],
+    });
+    console.log("------------Triggered", listings, "-------------Triggered")
+    res.render("listings/searchedListing.ejs", {listings}); 
 }

@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV != "producton"){
+if(process.env.NODE_ENV != "production"){
     require("dotenv").config()
 }
 console.log(process.env.CLOUD_NAME); //cloud_name is a key in our .env file which can be only accesed with the help of 'dotenv' package
@@ -38,10 +38,10 @@ store.on("error", ()=>{
 const sessionOption = {
     store, //telling our express session to use connect-mongo for storing session info and local device
     secret: process.env.SECRET,
-    saveUninitialized: true,
+    saveUninitialized: false, //makes a session, even if user didnt login if set to true
     resave: false,
     cookie: {
-        expire: Date.now() + 7 * 24 * 60 * 60 * 1000, //In milliseconds
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, //In milliseconds
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true
     }
@@ -88,7 +88,7 @@ main()
 
 
 async function main() {
-    await mongoose.connect(process.env.ATLASDB_URL);
+    await mongoose.connect(process.env.ATLASDB_URL); 
 }
 
 //Routes:-

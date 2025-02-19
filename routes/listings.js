@@ -24,6 +24,10 @@ router.route("/")
     asyncWrap(listingController.newListing)
 );
 
+//for search bar(not so advanced but still😉);
+router.get("/search",
+    asyncWrap(listingController.search)
+)
 
 //New route
 router.get("/new",isLoggedin, listingController.renderNewForm );

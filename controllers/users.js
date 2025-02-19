@@ -42,12 +42,22 @@ module.exports.login = async(req, res)=>{
 }
 
 module.exports.logout = (req, res, next)=>{
-    req.logOut((err)=>{ //deserializes all info
+    req.logout((err)=>{ 
         if(err){
             return next(err);
         }else{
-            req.flash("success", "You have been logged out!");
+             
+            res.clearCookie("connect.sid")
+            
+            req.flash("success", "You have been logged out!"); //new session
+
+            // Object.keys(flashmsgs).forEach((keys)=>{
+            //     req.flash(keys, flashmsgs[keys]) //now that the old session has been destroyed but bc we're still calling req.flash new session will automatically be created
+            // });
+            console.log(req.session);
+
             res.redirect("/listings");
+            
         }
     });
 }

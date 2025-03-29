@@ -1,12 +1,17 @@
 const { model } = require("mongoose");
 const Listing = require("../models/listing");
+const User = require("../models/users");
 const geocoding = require("@mapbox/mapbox-sdk/services/geocoding"); //requiring geocodingg service from sk package which we downloaded
 const geocodingClient =  geocoding({ accessToken: process.env.MAP_TOKEN }); //connects service(i.e geocoding here) with api of mapbox
-
+const Booking = require("../models/booking");
 
 module.exports.index = async (req, res)=>{
     let allListings = await Listing.find({})
-    res.render("listings/home.ejs", {allListings});
+    let currUser = null;
+    if(res.locals.currUser != undefined){
+         currUser = await User.findById(res.locals.currUser._id)
+    }
+    res.render("listings/home.ejs", {allListings, currUser});
 }
 
 module.exports.renderNewForm = (req, res)=>{
@@ -39,6 +44,13 @@ module.exports.newListing = async (req, res, next)=>{
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
 }
+ 
+module.exports.renderWishlist = async(req, res)=>{
+    const userId = res.locals.currUser._id
+    const user = await User.findById(userId).populate("wishlist");
+    console.log("user.wishlist=>",user.wishlist);
+    res.render("listings/wishlist.ejs", {user})
+}
 
 module.exports.showListing = async (req, res)=>{
     //console.log(req.session);
@@ -57,7 +69,7 @@ module.exports.showListing = async (req, res)=>{
         res.redirect("/listings");
      }
     // console.log(specificList.image.url);
-    res.render("listings/specificList.ejs", {specificList},);
+    res.render("listings/specificList.ejs", {specificList});
 }
 
 module.exports.renderEditForm = async (req, res)=>{
@@ -107,7 +119,6 @@ module.exports.deleteListing = async (req, res)=>{
 
 module.exports.filter = async (req, res)=>{
     let {category} = req.params;
-    console.log(category);
     let filteredListings = await Listing.find({category: category}); 
     // console.log("-----",filteredListings,"-----");
     res.render("listings/filters.ejs", {filteredListings});
@@ -121,6 +132,12 @@ module.exports.search = async(req, res)=>{
             {description: {$regex: query, $options: 'i'}}
         ],
     });
-    console.log("------------Triggered", listings, "-------------Triggered")
+    // console.log("------------Triggered", listings, "-------------Triggered")
     res.render("listings/searchedListing.ejs", {listings}); 
+}
+module.exports.currentBooking = async(req, res)=>{
+    const myBookings = await Booking.find({user : res.locals.currUser._id}).populate("Listing");
+    console.log("All of my bookings",myBookings)
+    // res.send("ok")
+    res.render("listings/myBookings", {myBookings})
 }

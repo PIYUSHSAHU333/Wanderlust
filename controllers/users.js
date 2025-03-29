@@ -1,4 +1,4 @@
-const user = require("../models/users");
+const User = require("../models/users");
 
 
 module.exports.renderSignupForm = (req, res)=>{
@@ -9,12 +9,12 @@ module.exports.signup = async(req, res)=>{
 
     try{
         let {username, email, password} = req.body;
-    let newUser = new user({
+    let newUser = new User({
         email: email,
         username: username
     });
-    let registeredUser =  await user.register(newUser, password);
-    console.log(registeredUser);
+    let registeredUser =  await User.register(newUser, password);
+    // console.log(registeredUser);
 
     req.login(registeredUser, (err)=>{ //directly logs in the user after signing up
         if(err){
@@ -41,6 +41,42 @@ module.exports.login = async(req, res)=>{
     res.redirect(redirectUrl);
 }
 
+module.exports.renderEditForm = async(req, res)=>{
+    const user = await User.findById(res.locals.currUser._id);
+    // console.log(user);
+    res.render("users/Edit.ejs", {user})
+}
+module.exports.editAc = async(req, res)=>{
+    const user = await User.findById(res.locals.currUser._id);
+    const { Username, Email, currentPassword, newPassword } = req.body.user;
+
+    user.username = Username;
+    user.email = Email;
+
+    if(currentPassword && newPassword){
+    const isMatch = await user.authenticate(currentPassword);
+    if(!isMatch.user){
+        req.flash("error", "Incorrect current password.");
+        return res.redirect("/account");
+    }
+    await user.setPassword(newPassword);
+    }
+    await user.save();
+
+    
+    req.login(user, (err) => {
+        if (err) {
+            console.log(err);
+            req.flash("error", "Something went wrong. Please log in again.");
+            return res.redirect("/login");
+        }
+        req.flash("success", "Account details updated successfully!");
+        res.redirect("/listings");
+    });
+
+}
+
+
 module.exports.logout = (req, res, next)=>{
     req.logout((err)=>{ 
         if(err){
@@ -51,10 +87,7 @@ module.exports.logout = (req, res, next)=>{
             
             req.flash("success", "You have been logged out!"); //new session
 
-            // Object.keys(flashmsgs).forEach((keys)=>{
-            //     req.flash(keys, flashmsgs[keys]) //now that the old session has been destroyed but bc we're still calling req.flash new session will automatically be created
-            // });
-            console.log(req.session);
+            
 
             res.redirect("/listings");
             

@@ -7,6 +7,12 @@ const userSchema = new schema({
         type: String,
         required: true
     },
+    wishlist: [
+        {
+            type:schema.Types.ObjectId,
+            ref: "listing"
+        }
+    ]
     
 });
 

@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express"); 
 const router = express.Router();
 const asyncWrap = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
@@ -23,10 +23,17 @@ router.route("/")
     validateListing,  //applied middleware so that testing would be done for validating!
     asyncWrap(listingController.newListing)
 );
+// for current booking sof a user
+router.get("/myBookings", isLoggedin, listingController.currentBooking);
 
 //for search bar(not so advanced but still😉);
 router.get("/search",
     asyncWrap(listingController.search)
+)
+//wishlist
+router.get("/wishlist",
+    isLoggedin,
+    asyncWrap( listingController.renderWishlist)
 )
 
 //New route

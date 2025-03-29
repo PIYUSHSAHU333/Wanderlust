@@ -1,11 +1,12 @@
 if(process.env.NODE_ENV != "production"){
     require("dotenv").config()
 }
-console.log(process.env.CLOUD_NAME); //cloud_name is a key in our .env file which can be only accesed with the help of 'dotenv' package
+// console.log(process.env.CLOUD_NAME); //cloud_name is a key in our .env file which can be only accesed with the help of 'dotenv' package
 
 
 const express = require("express");
 const ExpressErr = require("./utils/ExpressErr.js");
+const priceCal = require("./utils/priceCal.js")
 const app = express();
 const path = require("path");
 const mongoose = require("mongoose");
@@ -20,7 +21,11 @@ const LocalStrategy = require("passport-local");
 const passport = require("passport");
 const user = require("./models/users.js");
 const dbUrl = process.env.ATLASDB_URL;
-
+const crypto = require("crypto");
+const Razorpay = require("razorpay");
+const Listing = require("./models/listing.js");
+const User = require("./models/users.js");
+const {isLoggedin} = require("./middlewares.js")
 let store = MongoStore.create( //some imp options for connect-mongo
     {
         mongoUrl: dbUrl, //link toactual db (actually connect-mongo allows exp-sessions to store session info in Atlas and not in local memory | it's a via)
@@ -59,19 +64,30 @@ passport.use(new LocalStrategy(user.authenticate()));// This authenticate which 
 passport.serializeUser(user.serializeUser()); //stores info for a user in one session(serialising the user)
 passport.deserializeUser(user.deserializeUser()); //removes the info of user when session ends(deserialising user);
 
+//initailizing razorpay
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY,
+    key_secret: process.env.RAZORPAY_SECRET
+})
+
 app.use((req, res, next)=>{
     res.locals.success = req.flash("success"); //we can access res.locals.success in ejs tempelate now 
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user; //don't be confused, In an Express app, req.user is typically assigned by Passport.js, which is a middleware for authentication. Now we can access currUser in ejs temeplates as well unlike req object(as it's not accessible for ejs tempelates)
+    // console.log(res.locals.currUser)
     next();
 });
 const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
+const bookingRouter = require("./routes/booking.js");
+const { error } = require("console");
+const { date } = require("joi");
 //-----------------------------------------
-app.set("Views", path.join(__dirname, "Views"));
-app.set("Views engine", "ejs");
-app.use(express.urlencoded({extended: true})); //parses url encoded data from form to js objects
+app.set("views", path.join(__dirname, "Views"));
+app.set("view engine", "ejs");
+app.use(express.urlencoded({extended: true})); //parses url encoded data from form to js objects in req.body
+app.use(express.json()); //helps in having json format data into req.body!
 app.use(methodOverride('_method'))
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -91,6 +107,8 @@ async function main() {
     await mongoose.connect(process.env.ATLASDB_URL); 
 }
 
+//----------------------------------------
+
 //Routes:-
 
 // app.get("/demouser", async(req, res)=>{
@@ -101,12 +119,101 @@ async function main() {
 //     let registeredUser = await user.register(fakeUser, "hurryuptomorrow"); //saves new user with salting and hashed password in mongoose (yes sir you heard it right, no need of user.save() and all shit)
 //     res.send(registeredUser);
 // });
+//listing,review,users and booking routes(using routers)
 
-//listing and review routes(using routers)
+//-----------------------------------------
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
+app.use("/:id/booking", bookingRouter);
+//caluclate price in livetime route
+app.use("/calculateprice",( req, res)=>{
+   const {checkIn, checkOut, pricePerNight} = req.body;
 
+   if(!checkIn || !checkOut){
+      return res.status(400).json({error: "Invalid date"});
+   }
+        const totalPrice = priceCal(checkIn, checkOut, pricePerNight);
+        res.json({totalPrice});
+        
+})
+//create order (order id for razor pay)api
+app.post("/create-order",async (req, res)=>{
+    try{
+        const {amount} = req.body;
+
+        const options = {
+            amount: amount * 100, //razorpay works with paisa,
+            currency: "INR",
+            receipt: `receipt_${Date.now()}`,
+        };
+
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    }catch(error){
+        res.status(500).json({message: "Error creating order", error})
+    }
+});
+
+//verifying the payement after the payment has been processed by razorpay
+app.post("/verify", async (req, res)=>{
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body; // we receives from res from handler function which is given by razorpay backend
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id; //creating the body with same logic as razorpay
+
+    const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_SECRET) //razorpay algo also uses secretkey to create hashed signature so we're also using same logic
+    .update(body) //hashing the body with same algo and logic to make same signature
+    .digest("hex");
+
+    if (expectedSignature === razorpay_signature) { //if both signature matches then payment verifed
+        res.json({success: "Payment successful"}); // Render success page
+      } else {
+        res.json({failure: "Payment failed"}); // Render failure page
+      }
+      console.log("Payment verified")
+});
+
+//=>>>route for wishlist
+app.post("/wishlist/:listingId", isLoggedin, async(req, res)=>{
+    const {listingId} = req.params
+    const listing = await Listing.findById(listingId);
+    const user = await User.findById(res.locals.currUser._id);
+
+    if(!user){
+        return res.status(401).json({message: "Unauthorized: User not found", redirect: "/login"})
+    }
+
+    if(!listing){
+        return res.status(404).json({message: "Listing not found"})
+    }
+
+    if(!user.wishlist.includes(listingId)){
+        user.wishlist.push(listing);
+        await user.save();
+    }
+    console.log("Wishlist updated??")
+})
+
+app.delete("/wishlist/:listingId", isLoggedin, async(req, res)=>{
+    const {listingId} = req.params
+    const listing = await Listing.findById(listingId);
+    const user = await User.findById(res.locals.currUser._id);
+
+    if(!user){
+        return res.status(401).json({message: "Unauthorized: User not found"})
+    }
+
+    if(!listing){
+        return res.status(404).json({message: "Listing not found"})
+    }
+    if(user.wishlist.includes(listingId)){
+        user.wishlist = user.wishlist.filter(id => id.toString() !== listingId);
+        await user.save();
+    }
+    console.log("Wishlist item deleted");
+
+})
 //!!--Invalid route handler--!!
 app.use((req, res, next)=>{
    throw new ExpressErr(401, "Page not found");

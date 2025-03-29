@@ -27,15 +27,41 @@ body{
 .navbar-nav a:hover{
     
     opacity: 1;
-    background-color: rgba(245, 245, 245, 0.5) !important;
+    
+    background-color: rgba(245, 245, 245, 0.8) !important;
     border: none !important; 
-   
     
 }
 
+/* custom-dropdown-btn */
+.custom-dropdown-btn{
+    padding-right: 2rem !important;
+    box-sizing: border-box !important;
+    border-radius: 50px !important;
+    opacity: 0.85 !important;
+    padding-left: 2px;
+    
+    border: solid 2px black !important;
+    position: relative !important;
+    top: 1px !important;
+}
+.custom-dropdown-btn:hover{
+    opacity: 1;
+    background-color: rgba(245, 245, 245, 0.8) !important;
+    box-shadow: 1px 2px 4px #fe424d ;
+    /* border: none !important;  */
+}
+.custom-dropdown-btn::after{
+    display: none !important;
+}
 
-
-
+/* dropdown-menu */
+.dropdown-menu{
+    transform: translateX(-150px) !important; 
+    width: 220px !important;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    
+}
 
 .nav-link {
     color: #222222 !important;
@@ -89,17 +115,71 @@ body{
 }
 .card-img-overlay{
     opacity: 0;
+    z-index: 2000;
+    position: relative;
+    
 }
 .card-img-overlay:hover{
-    opacity: 0.2;
-    background-color: white;
+    opacity: 1;
+    background-color: rgba(255, 255, 255,0.2);
 }
 .card-body p{
     font-weight: 400 !important;
 }
 .listClick{
     text-decoration: none !important;
+    
 }
+
+/* paymentPending from myBookings page */
+.paymentPending{
+    z-index: 10; 
+    text-decoration: underline;
+    width: fit-content;
+    color: red;
+}
+.paymentPending:hover{
+    cursor: pointer;
+    color: green;
+}
+/* payNow button */
+.payNow{
+    background-color: #fe424d !important;
+    border: none !important;
+    display: inline !important;
+    width: 90px !important;
+    height: 40px !important;
+    position: relative;
+    right: 495px;
+    top: 17px;
+}
+.payNow:hover{
+    background-color: #28a745 !important;
+
+}
+
+/* wishlistButton */
+.wishlistButton{
+    z-index: 3000 !important;
+    border: none;
+    opacity: 1 !important;
+    background-color: transparent !important;
+    text-align: right !important;
+    position: absolute !important;
+    font-weight: bold !important;
+}
+.wishlistButton img {
+    position: relative !important;
+    font-weight: bold !important;
+    width: 25px;
+    opacity: 1 !important;
+    z-index: 3000 !important;
+    filter: none !important;
+}
+.wishlistButton:hover img{
+    transform: scale(1.1);
+}
+
 
  /* New page */
 .add-btn{
@@ -176,4 +256,19 @@ body{
     padding: 0 !important;
 }
 
+/* book now button */
+.book-now-button{
+    text-decoration: none;
+    position: relative;
+    right: 22px;
+    bottom: 3px;
+    padding: 4px 11px 4px 11px;
+    border-radius: 16px;
+    background-color: #fe424d;
+    color: white;
+    border: solid 1px #fe424d ;
+}
+.book-now-button:hover{
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
+}
 

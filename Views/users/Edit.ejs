@@ -1,0 +1,42 @@
+<% layout('./layouts/layouts.ejs') -%>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+                <br><br>
+            <form action="/account" method="post" novalidate class="needs-validation" >
+                    <h2>Edit your account details</h2> <br>
+                    <div class="username mb-3">
+                        <label for="Username"  class="form-label">Username</label>
+                        <input type="text" name="user[Username]" class="form-control" value="<%= user.username %>" required >
+
+                        <div class="invalid-feedback">Enter username</div>
+                    </div>
+
+                    <div class="Email mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="text" class="form-control" name="user[Email]" value="<%= user.email %>" required></input>
+
+                        <div class="invalid-feedback">Please enter your email</div>
+                    </div>
+
+                    <div class="Current password mb-3">
+                        <label for="currentPassword" class="form-label">Current password</label>
+                        <input type="password" name="user[currentPassword]" placeholder="Enter current password" class="form-control">
+
+                        <div class="invalid-feedback">Enter current password</div>
+                    </div>
+
+                    <div class="New password mb-3">
+                        <label for="currentPassword" class="form-label">New password</label>
+                        <input type="password" name="user[newPassword]" placeholder="Enter new password" class="form-control">
+
+                        <div class="invalid-feedback">Enter new password</div>
+                    </div>
+                    
+                <br>
+                <button class="btn btn-dark add-btn">Update</button> <br> <br>
+            </form>
+        </div>
+    </div>
+    
+</body>

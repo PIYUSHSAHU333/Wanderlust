@@ -3,7 +3,7 @@ const router = express.Router({mergeParams: true});
 const user = require("../models/users");
 const wrapAsync = require("../utils/wrapAsync");
 const passport = require("passport");
-const { saveRedirectUrl } = require("../middlewares");
+const { saveRedirectUrl, isLoggedin } = require("../middlewares");
 const userController = require("../controllers/users");
 
 //for signup form and to signup(post)
@@ -20,6 +20,12 @@ router.route("/login")
     failureFlash: true
     }), //ask chatgpt 
     wrapAsync (userController.login))
+
+
+//for updating the account details(email, username and password);
+router.route("/account")
+.get(isLoggedin, wrapAsync(userController.renderEditForm))
+.post(isLoggedin, wrapAsync(userController.editAc))
 
 //for logging out
 router.get("/logout", userController.logout);

@@ -1,7 +1,7 @@
 
 <style>
   .search-btn {
-    background-color: #fe424d;
+    background: linear-gradient(135deg, #fe424d, #ff3e75, #ff6e7f);
     color: white;
     border-radius: 2rem;
     padding: 0rem 1.25rem 0rem 1.25rem;
@@ -10,14 +10,17 @@
     background-color: #fe424d;
     color: white;
     border-radius: 2rem;
+    box-shadow: 2px 3px 5px rgba(255, 118, 158, 0.8);
     
   }
+   
   .search-btn i{
     margin-right: 0.4rem;
   }
   .search-inp{
     border-radius: 2rem;
     padding: 0.5rem 3rem 0.5rem 3rem;
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
   }
 
 </style>
@@ -43,13 +46,31 @@
 
 
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="/listings/new">Airbnb your home</a>
-          <% if(!currUser) {   %>
-          <a class="nav-link active" href="/signup"><b>Sign Up</b></a>
-          <a class="nav-link" href="/login"><b>Log in</b></a>
-          <% } else { %> 
-          <a class="nav-link" href="/logout"><b>Log out</b></a>
-          <% } %>
+          <a class="nav-link" href="/listings/new">List your home</a>
+          <a href="/listings/myBookings" class="nav-link">Current bookings</a>
+
+          <div class="dropdown">
+            <button class="btn custom-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-user"></i> &nbsp; &nbsp;  <i class="fa-solid fa-bars"></i>
+            </button>
+            <ul class="dropdown-menu">
+              
+              <% if(!currUser) {   %>
+                <li><a class="nav-link active" href="/signup"><b>Sign Up</b></a></li>
+                <li><a class="nav-link" href="/login"><b>Log in</b></a></li>
+                <% } else { %> 
+                <li><a class="nav-link" href="/logout"><b>Log out</b></a></li>
+                <% } %> <hr>
+                <li><a class="nav-link" href="/listings/new">List your home</a></li>
+                <li><a class="nav-link" href="/listings/wishlist">Your wishlist</a></li>
+                <li><a class="nav-link" href="/account">Account</a></li>
+                <hr>
+                <li><a class="nav-link" href="/listings/wishlist">Help Centre</a></li>
+            </ul>
+          </div>
+
+
+          
         </div>
       </div>
     </div>
@@ -68,5 +89,8 @@
       }
     })
     
+  
+
+
 
   </script>

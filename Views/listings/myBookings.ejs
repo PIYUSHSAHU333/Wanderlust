@@ -1,0 +1,49 @@
+<% layout('./layouts/layouts.ejs') -%>
+<body>
+  
+
+<div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
+    <% for(let booking of myBookings) {%>
+        
+          <div class="Listingcard card col">
+            <a href="/listings/<%= booking.Listing._id %>" style="color: black;" class="listClick">
+              <img src="<%= booking.Listing.image.url %>" class="card-img-top" alt="..." style=" width: 10rem; height: 15rem;">
+              <div class="card-img-overlay">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><%= booking.Listing.title %>,&nbsp; <%= booking.Listing.location %></h5>
+                <p class="card-text">
+                 (bookingId-<%= booking._id %>) <br> <br>
+                 <b>CheckIn Time</b>  - <%= booking.checkIn.toLocaleTimeString('en-US', {  weekday: 'short', 
+                 month: 'short', 
+                 day: '2-digit', 
+                 year: 'numeric', 
+                 hour: '2-digit', 
+                 minute: '2-digit', 
+                 hour12: true  })  %> <br>
+
+                 <b>CheckOut Time</b> - <%= booking.checkOut.toLocaleTimeString('en-US', {  weekday: 'short', 
+                 month: 'short', 
+                 day: '2-digit', 
+                 year: 'numeric', 
+                 hour: '2-digit', 
+                 minute: '2-digit', 
+                 hour12: true  }) %>
+                  
+                
+                </p>
+              </div>
+            </a>
+
+            <% if(!booking.isPayment){ %>
+              <em class="paymentPending" data-bs-toggle="tooltip" data-bs-placement="top" title="Pay Now" >payment pending</em>
+              <% } %>
+          </div>
+      
+      
+
+       <%  } %>
+</div>
+
+
+</body>

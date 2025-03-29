@@ -1,12 +1,18 @@
 const Listing = require('./models/listing.js'); // Adjust the path as needed
 const ExpressErr = require("./utils/ExpressErr.js");
-const {listingSchema, reviewSchema} = require("./schema.js");
+const {listingSchema, reviewSchema, bookingSchmea, bookingSchema} = require("./schema.js");
 const Review = require("./models/reviews.js");
+const joi = require("joi");
 
 module.exports.isLoggedin = (req, res, next)=>{
-    console.log(req);
+    // console.log(req);
     if(!req.isAuthenticated()){
-        req.session.redirectUrl = req.originalUrl //if we're not logged in, then only we need this original url bc then we have to first go to login page and then from there after login is done we need this originalUrl, in other case where we are already looged in we don't need originalUrl bc directly next() will be called (in isLoggedin)
+        if (req.headers.accept && req.headers.accept.includes("application/json")) { // If the request is an AJAX request
+            return res.status(401).json({ redirect: "/login" });
+        } 
+
+        req.session.redirectUrl = req.originalUrl //if we're not logged in, then only we need this original url bc then we have to first go to login page and then from there after login is done we need this originalUrl, in other case where we are already loged in we don't need originalUrl bc directly next() will be called (in isLoggedin)
+        console.log( req.session.redirectUrl)
         req.flash("error", "You must be loged in");
        return res.redirect("/login");
     }
@@ -61,3 +67,13 @@ module.exports.validateReview = (req, res, next)=>{ //For validating schema of r
         next();
     }
 }
+module.exports.validateBooking = (req, res, next)=>{
+    let {error} = bookingSchema.validate(req.body);
+    // console.log("------>>>>>",req.body);
+    if(error){
+        let errMsg = error.details.map((err)=> err.message).join(",");
+        throw new ExpressErr(400, errMsg)
+    }else{
+        next()
+    }
+    }

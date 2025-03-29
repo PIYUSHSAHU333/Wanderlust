@@ -1,0 +1,78 @@
+<% layout('./layouts/layouts.ejs') -%>
+<body>
+    <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
+        <% for (let list of user.wishlist){ %>
+            <a href="/listings/<%= list._id %>" class="listClick">
+                <div class="Listingcard card col">
+                    
+                    <img src="<%=list.image.url %>" class="card-img-top" alt="Listing image" style="height: 20rem">
+                        <div class="card-img-overlay">
+                            <button class="wishlistButton" data-isLiked="<%= currUser && currUser.wishlist.includes(list._id) ? 'true' : 'false' %>" data-listingId="<%= list._id %>"><img src="<%= currUser && currUser.wishlist.includes(list._id) ? '/images/heartFilled.png' : '/images/heartOutlined.png'%> " alt="img"></button>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text ">
+                               <b> <%= list.title %> </b>
+                               
+                                <br>
+                            &#8377;<%= list.price.toLocaleString("en-IN") %> / night
+                            <i class="taxInfo"> &nbsp; &nbsp;+ 18% GST</i>
+                            </p>
+                        </div>
+                        
+                </div>
+            </a>
+        <%  } %>
+ </div>
+
+
+ <script>
+    document.body.addEventListener("click", async function (e){
+        
+
+        if(e.target.closest('.wishlistButton')){
+            e.stopPropagation();
+            e.preventDefault();
+            const button = e.target.closest('.wishlistButton');
+
+            const listingId = button.dataset.listingid;
+            const isLiked = button.dataset.isliked === 'true';
+            const icon = button.querySelector('img');
+            console.log(listingId);
+            console.log("button data",button.dataset.listingid);
+        
+            if("<%= JSON.stringify(currUser)%>"){
+                 icon.src = isLiked ? "/images/heartOutlined.png" : "/images/heartFilled.png"
+                button.dataset.isliked = isLiked ? "false" : "true";
+            }
+            
+               
+            
+        try{
+
+            const response = await fetch (`/wishlist/${listingId}`, {
+                method : isLiked ? 'DELETE' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+             
+            const data = await response.json();
+            console.log("data=>",data);
+            if(data.redirect){
+                window.location.href = data.redirect;
+            }else{
+                console.log(data.message)
+            }
+            
+            
+
+        }catch(e){
+            console.log(e);
+        }
+        }
+
+    })
+
+ </script>
+</body>

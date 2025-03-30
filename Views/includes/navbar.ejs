@@ -22,6 +22,9 @@
     padding: 0.5rem 3rem 0.5rem 3rem;
     box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
   }
+  .search-inp:hover{
+    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+  }
 
 </style>
 
@@ -46,6 +49,7 @@
 
 
         <div class="navbar-nav ms-auto">
+          <a class=" bellIcon nav-link " href="/notification" > <span id="notificationCount" style="font-size: 12px;" >0</span><i class="fa-solid fa-bell"></i></a>
           <a class="nav-link" href="/listings/new">List your home</a>
           <a href="/listings/myBookings" class="nav-link">Current bookings</a>
 
@@ -62,6 +66,7 @@
                 <li><a class="nav-link" href="/logout"><b>Log out</b></a></li>
                 <% } %> <hr>
                 <li><a class="nav-link" href="/listings/new">List your home</a></li>
+                <li><a class="nav-link" href="/notification">Notifications</a></li>
                 <li><a class="nav-link" href="/listings/wishlist">Your wishlist</a></li>
                 <li><a class="nav-link" href="/account">Account</a></li>
                 <hr>
@@ -91,6 +96,8 @@
     
   
 
+   
+   
 
 
   </script>

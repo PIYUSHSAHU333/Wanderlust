@@ -4,7 +4,7 @@ const User = require("../models/users");
 const geocoding = require("@mapbox/mapbox-sdk/services/geocoding"); //requiring geocodingg service from sk package which we downloaded
 const geocodingClient =  geocoding({ accessToken: process.env.MAP_TOKEN }); //connects service(i.e geocoding here) with api of mapbox
 const Booking = require("../models/booking");
-
+const sendNotification = require("../utils/notifiation");
 module.exports.index = async (req, res)=>{
     let allListings = await Listing.find({})
     let currUser = null;
@@ -41,6 +41,7 @@ module.exports.newListing = async (req, res, next)=>{
     newListing.image = {url, filename} //It's also a format in which simply we can just assign values
     newListing.geometry = response.body.features[0].geometry //assigning newListing's geometry object the geometry object that we recieved from mapbox's geocodeservice
     await newListing.save();
+    sendNotification(res.locals.currUser._id, "New listing has been listed successfully");
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
 }
@@ -105,6 +106,7 @@ module.exports.updateListing = async (req, res) => {
     }
     listing.geometry = response.body.features[0].geometry
     await listing.save();
+    sendNotification(res.locals.currUser._id, "Your listing details have been updated ")
     req.flash("success", "Listing Updated Successfuly");
     res.redirect("/listings");
 }
@@ -114,6 +116,7 @@ module.exports.deleteListing = async (req, res)=>{
     let listing = await Listing.findByIdAndDelete(id); //also when we'll delete a listing, then post query middleware will be running which we've set to delete related reviews in review db in listing.js
     console.log(listing);
     req.flash("success", "Listing Deleted Successfuly");
+    sendNotification(res.locals.currUser._id,"Your listing has been deleted");
     res.redirect("/listings");
 }
 

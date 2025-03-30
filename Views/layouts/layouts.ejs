@@ -27,17 +27,39 @@
     <script src="/js/script.js"></script>
     <script src="/js/map.js"></script>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl, {
-              container: 'body'
-            });
-        });
-    });
+      
+
+    function updateNotificationCount(){
+        fetch("/notification/count")
+        .then(response => response.json())
+        .then(data =>{
+            let count = document.getElementById("notificationCount");
+            console.log(count)
+        if (!count) {
+            console.warn("Element #notificationCount not found");
+            return;
+        }
+            
+            if(data.count > 0){
+                count.textContent = `+${data.count}`;
+                console.log("data.count:",data.count);
+                count.style.display = "inline";
+            }else{
+                count.style.display = "none"
+            }
+        })
+    }
+    updateNotificationCount()
+    
+    document.getElementById("bellIcon").addEventListener("click", ()=>{
+        updateNotificationCount();
+    })
 </script>
 <!-- for toogle tooltip -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+     
+</script>
 
     <%- include("../includes/footer.ejs") %>
 </body>

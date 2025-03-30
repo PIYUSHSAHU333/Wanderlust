@@ -8,6 +8,10 @@ const express = require("express");
 const ExpressErr = require("./utils/ExpressErr.js");
 const priceCal = require("./utils/priceCal.js")
 const app = express();
+const http = require("http"); //requiring http module
+const {Server} = require("socket.io"); //requiring our Socket.io
+const server = http.createServer(app); //wrapping our previous http server with new server that can also handle websocket
+const io = new Server(server) //finally creating new server(websocket)
 const path = require("path");
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo');
@@ -25,7 +29,9 @@ const crypto = require("crypto");
 const Razorpay = require("razorpay");
 const Listing = require("./models/listing.js");
 const User = require("./models/users.js");
+const Notification = require("./models/notification.js");
 const {isLoggedin} = require("./middlewares.js")
+const sendNotification = require("./utils/notifiation.js");
 let store = MongoStore.create( //some imp options for connect-mongo
     {
         mongoUrl: dbUrl, //link toactual db (actually connect-mongo allows exp-sessions to store session info in Atlas and not in local memory | it's a via)
@@ -191,6 +197,7 @@ app.post("/wishlist/:listingId", isLoggedin, async(req, res)=>{
     if(!user.wishlist.includes(listingId)){
         user.wishlist.push(listing);
         await user.save();
+        await sendNotification(res.locals.currUser._id, "A new listing has been added to wishlist");
     }
     console.log("Wishlist updated??")
 })
@@ -210,9 +217,21 @@ app.delete("/wishlist/:listingId", isLoggedin, async(req, res)=>{
     if(user.wishlist.includes(listingId)){
         user.wishlist = user.wishlist.filter(id => id.toString() !== listingId);
         await user.save();
+        await sendNotification(res.locals.currUser._id, "A listing has been removed from wishlist");
     }
     console.log("Wishlist item deleted");
 
+})
+//Notification route
+app.get("/notification",async (req, res)=>{
+    const notifications = await Notification.find({user: res.locals.currUser._id}).sort({createdAt: -1});
+    res.render("users/notification.ejs", {notifications});
+    await Notification.updateMany({user: res.locals.currUser._id, isRead: false}, {isRead: true});
+} );
+//notifoication count
+app.get("/notification/count", async (req, res)=>{
+    const count = await Notification.countDocuments({user: res.locals.currUser._id, isRead: false});
+    res.json({count: count});
 })
 //!!--Invalid route handler--!!
 app.use((req, res, next)=>{

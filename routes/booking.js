@@ -36,6 +36,7 @@ router.route("/")
    const checkOutDateTime = formatTimeDate(checkOut);
    await sendMail(email, "Booking confirmation", `Your booking for ${listingTitle} is confirmed.\n\nCheckIn-${checkInDateTime} \n CheckOut- ${checkOutDateTime} \n\n\n ~Wanderlust`);
    req.flash("success", "Booking confirmed successfully! Have a nice stay :)");
+   await sendNotification(res.locals.currUser._id, `Booking for ${listingTitle} has been confirmed`);
    res.redirect("/listings")
 }));
 

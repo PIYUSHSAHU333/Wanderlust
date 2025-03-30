@@ -1,4 +1,5 @@
 
+const { required } = require("joi");
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
@@ -16,7 +17,7 @@ async function main(){
 const bookingSchema = new schema({
     name: {
         type: String,
-        require
+        required: true
     },
     user: {
         type:schema.Types.ObjectId,

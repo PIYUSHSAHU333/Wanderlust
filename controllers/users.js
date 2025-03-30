@@ -1,4 +1,5 @@
 const User = require("../models/users");
+const sendNotification = require("../utils/notifiation");
 
 
 module.exports.renderSignupForm = (req, res)=>{
@@ -49,10 +50,15 @@ module.exports.renderEditForm = async(req, res)=>{
 module.exports.editAc = async(req, res)=>{
     const user = await User.findById(res.locals.currUser._id);
     const { Username, Email, currentPassword, newPassword } = req.body.user;
-
+    let changes = [];
+    if(user.username !== Username){
     user.username = Username;
-    user.email = Email;
-
+    changes.push("username");
+    }
+    if(user.email !== Email){
+        user.email = Email
+        changes.push("email");
+    }
     if(currentPassword && newPassword){
     const isMatch = await user.authenticate(currentPassword);
     if(!isMatch.user){
@@ -60,8 +66,19 @@ module.exports.editAc = async(req, res)=>{
         return res.redirect("/account");
     }
     await user.setPassword(newPassword);
+    changes.push("password");
     }
     await user.save();
+
+    if(changes.length > 0){
+        let message = "your";
+        if(changes.length === 1){
+            message += `${changes[0]} has been updated`
+        }else {
+            message += changes.slice(0, -1).join(",") + "and" + changes[changes.length-1] + "have been updated"
+        }
+        await sendNotification(res.locals.currUser._id, message.charAt(0).toUpperCase() + message.slice(1));
+    }
 
     
     req.login(user, (err) => {

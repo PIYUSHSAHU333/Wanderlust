@@ -29,6 +29,9 @@ const crypto = require("crypto");
 const Razorpay = require("razorpay");
 const Listing = require("./models/listing.js");
 const User = require("./models/users.js");
+const { error } = require("console");
+const { date } = require("joi");
+const { Socket } = require("dgram");
 const Notification = require("./models/notification.js");
 const {isLoggedin} = require("./middlewares.js")
 const sendNotification = require("./utils/notifiation.js");
@@ -57,7 +60,11 @@ const sessionOption = {
         httpOnly: true
     }
 };
-
+const sessionMiddleware = session(sessionOption);
+//attaching session with webscoket(socket.io)as socket.io doesnt send cookies so attaching session will let still socket.io to access session info 
+io.use((Socket, next)=>{
+    sessionMiddleware(Socket.request, {}, next)
+})
 
 app.use(session(sessionOption));
 app.use(flash());
@@ -70,12 +77,30 @@ passport.use(new LocalStrategy(user.authenticate()));// This authenticate which 
 passport.serializeUser(user.serializeUser()); //stores info for a user in one session(serialising the user)
 passport.deserializeUser(user.deserializeUser()); //removes the info of user when session ends(deserialising user);
 
+
+
+
+
+io.use((socket, next) => {
+    console.log("Session Data:", socket.request.session); // Debugging
+    if (socket.request.session && socket.request.session.passport.user) {
+        console.log(socket.request.session.passport.user)
+      next(); // Allow connection
+    } else {
+      next(new Error("Unauthorized")); // Reject connection
+    }
+  });
+  
+
+//socet.io connection establishment
+io.on("connection", (Socket)=>{
+    console.log("A new user has been connected",Socket.id)
+})
 //initailizing razorpay
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY,
     key_secret: process.env.RAZORPAY_SECRET
 })
-
 app.use((req, res, next)=>{
     res.locals.success = req.flash("success"); //we can access res.locals.success in ejs tempelate now 
     res.locals.error = req.flash("error");
@@ -87,8 +112,7 @@ const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
 const bookingRouter = require("./routes/booking.js");
-const { error } = require("console");
-const { date } = require("joi");
+
 //-----------------------------------------
 app.set("views", path.join(__dirname, "Views"));
 app.set("view engine", "ejs");
@@ -250,7 +274,7 @@ app.use((err, req, res, next)=>{
 });
 
 //-----------------------
-app.listen("8080", (req, res)=>{
+server.listen("8080", (req, res)=>{
     console.log("Server is listening to port 8080");
 });
 

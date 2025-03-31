@@ -1,6 +1,6 @@
 const Listing = require('./models/listing.js'); // Adjust the path as needed
 const ExpressErr = require("./utils/ExpressErr.js");
-const {listingSchema, reviewSchema, bookingSchmea, bookingSchema} = require("./schema.js");
+const {listingSchema, reviewSchema, bookingSchema} = require("./schema.js");
 const Review = require("./models/reviews.js");
 const joi = require("joi");
 

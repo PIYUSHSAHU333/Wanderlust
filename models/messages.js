@@ -33,6 +33,10 @@ const messageSchema = new schema({
         type: Date,
         default: Date.now
     },
+    listing: {
+        type: schema.Types.ObjectId,
+        ref: "listing"
+    },
     seen: {
         type: Boolean,
         default: false

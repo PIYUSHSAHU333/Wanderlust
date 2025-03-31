@@ -82,7 +82,7 @@ passport.deserializeUser(user.deserializeUser()); //removes the info of user whe
 
 
 io.use((socket, next) => {
-    console.log("Session Data:", socket.request.session); // Debugging
+    // console.log("Session Data:", socket.request.session);
     if (socket.request.session && socket.request.session.passport.user) {
         console.log(socket.request.session.passport.user)
       next(); // Allow connection
@@ -112,6 +112,7 @@ const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
 const bookingRouter = require("./routes/booking.js");
+const chatRouter = require("./routes/chats.js");
 
 //-----------------------------------------
 app.set("views", path.join(__dirname, "Views"));
@@ -156,6 +157,7 @@ app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 app.use("/:id/booking", bookingRouter);
+app.use("/chats", chatRouter)
 //caluclate price in livetime route
 app.use("/calculateprice",( req, res)=>{
    const {checkIn, checkOut, pricePerNight} = req.body;

@@ -7,74 +7,54 @@
 
 
 
-        <% for(let msg of messages ){%>
-           
-
-
-        <% } %>
+        <ul id="messages">
+            <% messages.forEach(message => { %>
+                <li class="<%= message.sender.toString() === userId.toString() ? 'sent' : 'received' %>">
+                    <%= message.text %>
+                </li>
+            <% }) %>
+        </ul>
     </div>
 
     <form onsubmit="handleSubmit(event)">
         <input type="text" id="messageElement">
         <button>Submit</button>
     </form>
-
+ 
 
     
     <script src="/socket.io/socket.io.js"></script>
     <script>
 
-
+        const userId = "<%= userId %>"
+        const roomId = "<%= roomId %>"
         const socket = io();
         socket.on("connect", ()=>{
             console.log("a user has been connected", socket.id);
         })
 
-        const listingId = "<%= listingid %>";
-        const hostId = "<%= listingOwner %>";
-        const guestId = "<%= userId %>";
+        socket.emit('joinRoom', { roomId });
 
-        const roomId = `${listingId}_${hostId}_${guestId}`
+        function handleSubmit(event){
+          let messageInput =  document.getElementById("messageElement")
+          message = messageInput.value
+          if(message === "")return;
 
-        //join the room 
-        // socket.emit("joinroom", {listingId, hostId, guestId});
+          //emitting the message to server
+          socket.emit("sendMsg", {
+            roomId, sender: userId, content: message
+          })
+          messageInput.value = "";
+        }
 
-        socket.on("welcome", (s)=>{
-            console.log(s)
+        socket.on("new-msg", (data)=>{
+            const messageLsit = document.getElementById("messages");
+            const newMessage = document.createElement("li");
+            newMessage.textContent = `${data.sender}: ${data.content}`;
+            messageLsit.appendChild(newMessage);
         })
 
-        socket.on("receive-message", (msg)=>{
-            const sendLabel = msg.sender === guestId ? "You" : "Host";
-            if(msg.sender !== guestId){  
-            appendMssg(sendLabel, msg.content)
-            }
-            
-        })
-      
-      function handleSubmit(e){
-        e.preventDefault();
-        const input =  document.getElementById("messageElement").value.trim();
-        if(!input){return};
-        document.getElementById("messageElement").value = "";
-        socket.emit("sendMessage", {
-            listingId,
-            hostId,
-            guestId,
-            input,
-            userId,
-            sender: guestId
-        });
-
-        appendMssg("you", input)
-
-      }
-
-      function appendMssg(sender, content){
-        const chatbox = document.getElementById("chatbox");
-        const div = document.createElement("div");
-        div.textContent = `${sender}: ${content}`;
-        chatbox.appendChild(div);
-      }
+        
     </script>
 
 </body>

@@ -15,6 +15,10 @@ async function main(){
 }
 
 const messageSchema = new schema({
+    roomId: {
+        type: String,
+        required: true
+    },
     sender: {
         type: schema.Types.ObjectId,
         ref: "User",
@@ -32,10 +36,6 @@ const messageSchema = new schema({
     timestamp: {
         type: Date,
         default: Date.now
-    },
-    listing: {
-        type: schema.Types.ObjectId,
-        ref: "listing"
     },
     seen: {
         type: Boolean,

@@ -34,6 +34,7 @@ const { date } = require("joi");
 const { Socket } = require("dgram");
 const Notification = require("./models/notification.js");
 const Message = require("./models/messages.js");
+const ChatRoom = require("./models/chatRoom.js");
 const {isLoggedin} = require("./middlewares.js")
 const sendNotification = require("./utils/notifiation.js");
 let store = MongoStore.create( //some imp options for connect-mongo
@@ -98,37 +99,32 @@ io.on("connection",  (socket)=>{
     console.log("A new user has been connected",socket.id)
     socket.emit("welcome", `Welcome to the server ${socket.id}`)
 
-    // socket.on("joinroom", ({listingId, hostId, guestId, userId})=>{
-    //     //creating same room id that of server with same logic
-    //     //if user is host
-    //     let roomId = `${listingId}_${hostId}_${guestId}`
+     socket.on("joinroom", async ({roomId})=>{
+        socket.join(roomId)
+        console.log(`User joined a room: ${roomId}`);
         
-        
-    //     socket.join(roomId);
-    //     console.log(`${socket.id} joined room ${roomId}`);
-    // })
+    });
 
-    socket.on("sendMessage", async ({
-        listingId,
-        hostId,
-        guestId, 
-        input,
-        sender
-    })=>{
+    socket.on("sendMsg",async(data)=>{
+        const {roomId, sender,content} = data
+        const chatRoom = await ChatRoom.findOne({roomId: data.roomId});
+        const {UserAId, userBId} = chatRoom;
 
-        const receiver = sender === guestId ? hostId : guestId;
-        const msg = await Message.create({
+        let receiver = userBId === data.sender ? UserAId : userBId
+
+        const message = new Message({
+            roomId,
             sender,
-            receiver : receiver,
-            content: input,
-            listing: listingId
+            receiver,
+            content
         })
-
-        // console.log(s);
-        const roomId = `${listingId}_${hostId}_${guestId}`;
-        io.emit("receive-message",msg )
+        
+        await message.save() 
+        io.to(roomId).emit("new-msg", (message))
     })
 
+
+    
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });

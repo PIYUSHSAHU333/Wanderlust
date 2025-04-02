@@ -1,0 +1,30 @@
+<% layout('./layouts/layouts.ejs') -%>
+
+<div class="container mt-5">
+    <h4 style="border: solid 1px grey; width: 250px; border-radius: 40px; height: 50px; color: black; background-color: #f5f5f5; display: flex; justify-content: center; align-items: center; " >Your Messages</h4>
+
+    <% if (chatRoom.length > 0) { %>
+        <div class="list-group mt-4" >
+            <% chatRoom.forEach(room => { %>
+                
+                    <div class="list-group-item d-flex justify-content-between chatRoombox align-items-center" style="cursor: pointer; border-radius: 20px; background-color: lightblue; width: 500px; border: solid 2px black;">
+                    <h5><%= room.userAId._id.toString() == currUser.toString() ? room.userBId.username : room.userAId.username %></h5>
+                        <a href="/chats/<%= room.roomId %>" class="btn chat-btn " style="background-color: #fe424d; color: white; border-radius: 20px;">Chat</a>
+                    </div>
+                
+                <br>
+            <% }); %>
+        </div>
+    <% } else { %>
+        <p class="text-muted text-center mt-4">No chat rooms available.</p>
+    <% } %>
+
+    <style>
+        .chatRoombox:hover{
+            background-color: #f5f5f5 !important;
+        }
+        .chat-btn:hover{
+            background-color: black !important;
+        }
+    </style>
+</div>

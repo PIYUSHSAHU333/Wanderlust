@@ -16,7 +16,7 @@ let listing = <%- JSON.stringify(specificList) %>; //ask chatgpt || ejs is purel
           <img src="<%=  specificList.image.url%>" class="card-img-top show-img mb-3 img-fluid " alt="image">
           <div class="card-body">
             <p style="display: inline-block;" class="card-text show-pc">Owned by <i><%= specificList.owner.username %></i></p> &nbsp; &nbsp; &nbsp;  <a class="float-end book-now-button"  href="/<%= specificList.id %>/booking">Reserve</a> 
-            <a class="float-end book-now-button chat-btn " style="margin-right: 3px;" data-listingId="<%=specificList._id %>" data-hostId="<%= specificList.owner._id %>" id="chatWithHost">Chat with Host</a>
+            <a class="float-end book-now-button chat-btn " style="margin-right: 3px;"  data-hostid="<%= specificList.owner._id %>" id="chatWithHost">Chat with Host</a>
             <p class="card-text show-pc"> <%= specificList.description %> </p>
               <p class="card-text show-pc">  &#8377;<%= specificList.price.toLocaleString("en-IN") %></p>
               <p class="card-text show-pc"> <%= specificList.location %></p>
@@ -103,17 +103,23 @@ let listing = <%- JSON.stringify(specificList) %>; //ask chatgpt || ejs is purel
      </div>
   </div>
   <script>
+    
     document.getElementById("chatWithHost").addEventListener("click", async function(){
-      const hostId = this.dataset.hostId;
-      const response = await fetch("chats/create-room", {
+      console.log("Owner ID in EJS:", "<%= specificList.owner._id %>");
+      const hostId = this.dataset.hostid;
+      const response = await fetch("/chats/create-room", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({hostId})
       });
-      const data = response.json;
+      
+      const data = await response.json();
+      console.log(data);
+      
 
       if(data.success){
         //redirecting to chats/roomid;
+        console.log(data.roomId)
         window.location.href = `/chats/${data.roomId}`
       }else{
         alert("Some error occured, please try again!");

@@ -3,22 +3,23 @@
 
     <H1>Chat</H1>
 
-    <div id="chatbox" style="background-color: gray; height: 400px;">
+    
 
 
 
-        <ul id="messages">
+        <div id="messages">
             <% messages.forEach(message => { %>
-                <li class="<%= message.sender.toString() === userId.toString() ? 'sent' : 'received' %>">
-                    <%= message.text %>
-                </li>
+                <p class="<%= message.sender.toString() === userId.toString() ? 'sent' : 'received' %>" style="background-color: <%= message.sender.toString() === userId.toString() ? 'lightblue' : 'none' %>;">
+                    <%= message.sender.toString() == userId.toString() ? "You" : "Other" %>: &nbsp;&nbsp;&nbsp;&nbsp;
+                    <%= message.content %>
+                </p>
             <% }) %>
-        </ul>
-    </div>
+            </div>
+  
 
     <form onsubmit="handleSubmit(event)">
         <input type="text" id="messageElement">
-        <button>Submit</button>
+        <button>Send</button>
     </form>
  
 
@@ -36,6 +37,7 @@
         socket.emit('joinRoom', { roomId });
 
         function handleSubmit(event){
+        event.preventDefault(); 
           let messageInput =  document.getElementById("messageElement")
           message = messageInput.value
           if(message === "")return;
@@ -48,9 +50,12 @@
         }
 
         socket.on("new-msg", (data)=>{
+            console.log("new msg:" ,data);
             const messageLsit = document.getElementById("messages");
-            const newMessage = document.createElement("li");
-            newMessage.textContent = `${data.sender}: ${data.content}`;
+            const newMessage = document.createElement("p");
+            const senderLabel = data.sender == userId ? "You" : "Other";
+            newMessage.textContent = `${senderLabel}: ${data.content}`;
+            newMessage.style.backgroundColor = "lightblue"
             messageLsit.appendChild(newMessage);
         })
 

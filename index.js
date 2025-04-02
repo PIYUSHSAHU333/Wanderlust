@@ -99,13 +99,14 @@ io.on("connection",  (socket)=>{
     console.log("A new user has been connected",socket.id)
     socket.emit("welcome", `Welcome to the server ${socket.id}`)
 
-     socket.on("joinroom", async ({roomId})=>{
+     socket.on("joinRoom", async ({roomId})=>{
         socket.join(roomId)
         console.log(`User joined a room: ${roomId}`);
         
     });
 
     socket.on("sendMsg",async(data)=>{
+        console.log("data from sendMsg:",data);
         const {roomId, sender,content} = data
         const chatRoom = await ChatRoom.findOne({roomId: data.roomId});
         const {UserAId, userBId} = chatRoom;
@@ -118,9 +119,9 @@ io.on("connection",  (socket)=>{
             receiver,
             content
         })
-        
+        console.log("message: ",message)
         await message.save() 
-        io.to(roomId).emit("new-msg", (message))
+        io.to(roomId).emit("new-msg", message)
     })
 
 

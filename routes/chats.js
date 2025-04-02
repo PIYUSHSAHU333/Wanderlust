@@ -4,13 +4,27 @@ const asyncWrap = require("../utils/wrapAsync.js");
 const {isLoggedin} = require("../middlewares.js");
 const Listing = require("../models/listing.js");
 const { route } = require("./listings.js");
+const mongoose = require("mongoose");
 const Message = require("../models/messages.js")
 const ChatRoom = require("../models/chatRoom.js");
 
+router.get("/messages", asyncWrap(async(req, res)=>{
+    const currUser = res.locals.currUser._id;
+    const chatRoom =await  ChatRoom.find({
+        $or: [
+            {userAId: res.locals.currUser._id},
+            {userBId: res.locals.currUser._id}
+        ]
+    }).populate("userAId").populate("userBId").sort({ updatedAt: -1 });
+    console.log(chatRoom);
+    res.render("chats/messages.ejs", {chatRoom, currUser});
+}))
 
-router.get("/create-room", isLoggedin, asyncWrap(async(req, res)=>{
-    const userAId = res.locals.currUser._id; //current user who clicks on chat with host;
+
+router.post("/create-room",  asyncWrap(async(req, res)=>{
+    const userAId = res.locals.currUser._id; //current user who clicks on "chat with host";
     const userBId = req.body.hostId;                        //owner of listing;
+    console.log("userId", userBId);
     const roomId = [userAId, userBId].sort().join("_");
 
     //checking if chatRoom already exists;
@@ -28,7 +42,7 @@ router.get("/create-room", isLoggedin, asyncWrap(async(req, res)=>{
     res.json({success: true, roomId : chatRoom.roomId});
 
 }))
-route.get("/:roomId", asyncWrap(async(req, res)=>{
+router.get("/:roomId", asyncWrap(async(req, res)=>{
     const {roomId} = req.params;
 
     const chatRoom = await ChatRoom.findOne({roomId});
@@ -42,12 +56,12 @@ route.get("/:roomId", asyncWrap(async(req, res)=>{
 
     //fetching all req where two user are either sender or receiver;
     let messages = await Message.find({
-        $or: [
-            {sender: userAId, receiver: userBId},
-            {sender: userBId, receiver: userAId}
-        ]
-    }).sort({createdAt: -1});
+        roomId,
+    }).sort({createdAt: 1});
 
+    // console.log("messages =>>", messages);
+
+    // console.log("data from /:roomId",messages , "|", res.locals.currUser._id);
     res.render("chats/chat.ejs", {roomId, messages: messages || [], userId: res.locals.currUser._id})// ensures if at starting no matches are there then message is just an empty array
 }))
 

@@ -23,7 +23,7 @@ router.route("/")
     validateListing,  //applied middleware so that testing would be done for validating!
     asyncWrap(listingController.newListing)
 );
-// for current booking sof a user
+// for current bookings of a user
 router.get("/myBookings", isLoggedin, listingController.currentBooking);
 
 //for search bar(not so advanced but still😉);

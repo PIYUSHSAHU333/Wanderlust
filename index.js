@@ -33,6 +33,7 @@ const { error } = require("console");
 const { date } = require("joi");
 const { Socket } = require("dgram");
 const Notification = require("./models/notification.js");
+const Message = require("./models/messages.js");
 const {isLoggedin} = require("./middlewares.js")
 const sendNotification = require("./utils/notifiation.js");
 let store = MongoStore.create( //some imp options for connect-mongo
@@ -93,9 +94,47 @@ io.use((socket, next) => {
   
 
 //socet.io connection establishment
-io.on("connection", (Socket)=>{
-    console.log("A new user has been connected",Socket.id)
-})
+io.on("connection",  (socket)=>{
+    console.log("A new user has been connected",socket.id)
+    socket.emit("welcome", `Welcome to the server ${socket.id}`)
+
+    // socket.on("joinroom", ({listingId, hostId, guestId, userId})=>{
+    //     //creating same room id that of server with same logic
+    //     //if user is host
+    //     let roomId = `${listingId}_${hostId}_${guestId}`
+        
+        
+    //     socket.join(roomId);
+    //     console.log(`${socket.id} joined room ${roomId}`);
+    // })
+
+    socket.on("sendMessage", async ({
+        listingId,
+        hostId,
+        guestId, 
+        input,
+        sender
+    })=>{
+
+        const receiver = sender === guestId ? hostId : guestId;
+        const msg = await Message.create({
+            sender,
+            receiver : receiver,
+            content: input,
+            listing: listingId
+        })
+
+        // console.log(s);
+        const roomId = `${listingId}_${hostId}_${guestId}`;
+        io.emit("receive-message",msg )
+    })
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+    });
+});
+
+
 //initailizing razorpay
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY,
@@ -249,16 +288,23 @@ app.delete("/wishlist/:listingId", isLoggedin, async(req, res)=>{
 
 })
 //Notification route
-app.get("/notification",async (req, res)=>{
+app.get("/notification",isLoggedin,async (req, res)=>{
     const notifications = await Notification.find({user: res.locals.currUser._id}).sort({createdAt: -1});
     res.render("users/notification.ejs", {notifications});
     await Notification.updateMany({user: res.locals.currUser._id, isRead: false}, {isRead: true});
 } );
 //notifoication count
 app.get("/notification/count", async (req, res)=>{
-    const count = await Notification.countDocuments({user: res.locals.currUser._id, isRead: false});
+    let count;
+    if(!res.locals.currUser){
+        count = 0;
+    }else{
+         count = await Notification.countDocuments({user: res.locals.currUser._id, isRead: false});
+    }
+    
     res.json({count: count});
-})
+});
+
 //!!--Invalid route handler--!!
 app.use((req, res, next)=>{
    throw new ExpressErr(401, "Page not found");

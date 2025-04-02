@@ -1,0 +1,80 @@
+<% layout('./layouts/layouts.ejs') -%>
+<body>
+
+    <H1>Chat</H1>
+
+    <div id="chatbox" style="background-color: gray; height: 400px;">
+
+
+
+        <% for(let msg of messages ){%>
+           
+
+
+        <% } %>
+    </div>
+
+    <form onsubmit="handleSubmit(event)">
+        <input type="text" id="messageElement">
+        <button>Submit</button>
+    </form>
+
+
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+
+        const socket = io();
+        socket.on("connect", ()=>{
+            console.log("a user has been connected", socket.id);
+        })
+
+        const listingId = "<%= listingid %>";
+        const hostId = "<%= listingOwner %>";
+        const guestId = "<%= userId %>";
+
+        const roomId = `${listingId}_${hostId}_${guestId}`
+
+        //join the room 
+        // socket.emit("joinroom", {listingId, hostId, guestId});
+
+        socket.on("welcome", (s)=>{
+            console.log(s)
+        })
+
+        socket.on("receive-message", (msg)=>{
+            const sendLabel = msg.sender === guestId ? "You" : "Host";
+            if(msg.sender !== guestId){  
+            appendMssg(sendLabel, msg.content)
+            }
+            
+        })
+      
+      function handleSubmit(e){
+        e.preventDefault();
+        const input =  document.getElementById("messageElement").value.trim();
+        if(!input){return};
+        document.getElementById("messageElement").value = "";
+        socket.emit("sendMessage", {
+            listingId,
+            hostId,
+            guestId,
+            input,
+            userId,
+            sender: guestId
+        });
+
+        appendMssg("you", input)
+
+      }
+
+      function appendMssg(sender, content){
+        const chatbox = document.getElementById("chatbox");
+        const div = document.createElement("div");
+        div.textContent = `${sender}: ${content}`;
+        chatbox.appendChild(div);
+      }
+    </script>
+
+</body>

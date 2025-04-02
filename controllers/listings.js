@@ -11,6 +11,7 @@ module.exports.index = async (req, res)=>{
     if(res.locals.currUser != undefined){
          currUser = await User.findById(res.locals.currUser._id)
     }
+    // sendNotification(res.locals.currUser._id, "Welcome to wanderlust");
     res.render("listings/home.ejs", {allListings, currUser});
 }
 

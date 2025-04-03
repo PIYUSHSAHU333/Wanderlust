@@ -23,6 +23,7 @@ router.route("/")
     validateListing,  //applied middleware so that testing would be done for validating!
     asyncWrap(listingController.newListing)
 );
+router.get("/helpCenter", listingController.helpCenter)
 // for current bookings of a user
 router.get("/myBookings", isLoggedin, listingController.currentBooking);
 

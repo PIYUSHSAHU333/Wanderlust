@@ -1,0 +1,80 @@
+
+    
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #fe424d;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #121212;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #fe424d;
+        }
+        .faq-item {
+            margin-bottom: 10px;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: white;
+        }
+        .contact-form button {
+            background-color: #fe424d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+    </style>
+
+<body>
+    <div class="navbar">Help Center</div>
+    <div class="container">
+        <div class="section">
+            <h2>General Information</h2>
+            <p>Welcome to our help page. Here you'll find answers to common questions about using our platform.</p>
+        </div>
+        <div class="section">
+            <h2>FAQs</h2>
+            <div class="faq-item"><strong>How do I book a listing?</strong><br>Search for a listing, select your dates, and confirm your booking.</div>
+            <div class="faq-item"><strong>How can I contact a host?</strong><br>Only guests can initiate chats with hosts via the messaging system.</div>
+            <div class="faq-item"><strong>How do I list my place?</strong><br>Just click on List your Home in navbar section and fill the asked details</div>
+        </div>
+        <div class="section">
+            <h2>Contact Support</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Describe your issue" rows="4" required></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+

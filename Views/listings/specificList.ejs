@@ -15,8 +15,10 @@ let listing = <%- JSON.stringify(specificList) %>; //ask chatgpt || ejs is purel
           <h5 class="card-title"> <b><%= specificList.title %></b></h5>
           <img src="<%=  specificList.image.url%>" class="card-img-top show-img mb-3 img-fluid " alt="image">
           <div class="card-body">
+            <% if(currUser && !currUser._id.equals(specificList.owner._id)) { %>
             <p style="display: inline-block;" class="card-text show-pc">Owned by <i><%= specificList.owner.username %></i></p> &nbsp; &nbsp; &nbsp;  <a class="float-end book-now-button"  href="/<%= specificList.id %>/booking">Reserve</a> 
-            <a class="float-end book-now-button chat-btn " style="margin-right: 3px;"  data-hostid="<%= specificList.owner._id %>" id="chatWithHost">Chat with Host</a>
+            <a class="float-end book-now-button chat-btn " style="margin-right: 3px; cursor: pointer;"  data-hostid="<%= specificList.owner._id %>"  id="chatWithHost">Chat with Host</a>
+            <% } %>
             <p class="card-text show-pc"> <%= specificList.description %> </p>
               <p class="card-text show-pc">  &#8377;<%= specificList.price.toLocaleString("en-IN") %></p>
               <p class="card-text show-pc"> <%= specificList.location %></p>

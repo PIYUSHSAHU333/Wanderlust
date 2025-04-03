@@ -24,7 +24,7 @@ const popup = new mapboxgl.Popup({ offset: 25, closeButton: true, className: "ma
       justify-content: center;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
       "> 
-      <i class="fa-solid fa-compass" style="font-size: 40px; color: #fe424d; ";></i> <p> <b>Exact location will be provided after booking</b></P>
+      <i class="fa-solid fa-compass" style="font-size: 40px; color: #fe424d; ";></i> <p> <b>Have a happy journey</b></P>
      </div>`
    
 

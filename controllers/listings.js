@@ -145,3 +145,6 @@ module.exports.currentBooking = async(req, res)=>{
     // res.send("ok")
     res.render("listings/myBookings", {myBookings})
 }
+module.exports.helpCenter = async(req, res)=>{
+    res.render("listings/helpCenter.ejs")
+}

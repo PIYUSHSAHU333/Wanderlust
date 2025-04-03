@@ -12,7 +12,7 @@ body{
 
 .navbar{
     height: 5rem;
-    z-index: 1;
+    z-index: 2500;
     background-color: white;
 
 }
@@ -114,7 +114,7 @@ body{
 }
 .card-img-overlay{
     opacity: 0;
-    z-index: 2000;
+    z-index: 2 !important;
     position: relative;
     
 }

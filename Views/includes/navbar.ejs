@@ -53,11 +53,11 @@
           <a class="nav-link" href="/listings/new">List your home</a>
           <a href="/listings/myBookings" class="nav-link">My bookings</a>
 
-          <div class="dropdown">
+          <div class="dropdown" style="z-index: 3500;">
             <button class="btn custom-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fa-solid fa-user"></i> &nbsp; &nbsp;  <i class="fa-solid fa-bars"></i>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="z-index: 3500 !important; position: absolute !important;">
               
               <% if(!currUser) {   %>
                 <li><a class="nav-link active" href="/signup"><b>Sign Up</b></a></li>
@@ -71,7 +71,7 @@
                 <li><a class="nav-link" href="/listings/wishlist">Your wishlist</a></li>
                 <li><a class="nav-link" href="/account">Account</a></li>
                 <hr>
-                <li><a class="nav-link" href="/listings/wishlist">Help Centre</a></li>
+                <li><a class="nav-link" href="/listings/helpCenter">Help Centre</a></li>
             </ul>
           </div>
 

@@ -1,6 +1,6 @@
 
 
-#A full-stack Airbnb clone built using Node.js, Express, MongoDB, and EJS — featuring real-time chat, wishlist management, Razorpay payment integration, advanced search, and more.
+#A full-stack Website to list your home for rental purposes and to book other listings as well built using Node.js, Express, MongoDB, and EJS — featuring real-time chat, wishlist management, Razorpay payment integration, advanced search, and more.
 
 ---
 

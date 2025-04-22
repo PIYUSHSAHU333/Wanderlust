@@ -41,14 +41,37 @@
 
 - User registration & login
 - Session-based authentication (cookies)
--epress-sessions
+- Express-sessions for session management
 
 ---
 
 ## ⚡ Installation
 
+### 🔐 Setup Environment Variables
+
+Before running the project, you'll need to set up the environment variables.
+
+1. **Create a `.env` file in the root of the project by copying `.env.example`.
+
+   ```bash
+   cp .env.example .env 
+
+2.Edit the .env file with your own credentials. Here's a breakdown of the required environment variables:
+
+ATLASDB_URL: Your MongoDB Atlas connection string.
+
+CLOUD_NAME, CLOUD_API_KEY, CLOUD_API_SECRET: Credentials for your Cloudinary account to handle image uploads.
+
+MAP_TOKEN: Your Mapbox API token for maps.
+
+SECRET, SECRETSTORE: Session secret values for securing user sessions.
+
+SMTP_USER, SMTP_PASS: Your email address and password for sending emails via Nodemailer (e.g., Gmail).
+
+RAZORPAY_KEY, RAZORPAY_SECRET: Your Razorpay API keys for processing payments.
+
 ```bash
-git clone https://github.com/yourusername/airbnb-clone.git
-cd airbnb-clone
+git clone https://github.com/PIYUSHSAHU333/Wanderlust.git
+cd Wanderlust
 npm install
 npm start

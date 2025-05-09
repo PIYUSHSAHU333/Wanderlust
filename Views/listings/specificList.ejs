@@ -17,9 +17,9 @@ let listing = <%- JSON.stringify(specificList) %>; //ask chatgpt || ejs is purel
           <div class="card-body">
             <% if(currUser && !currUser._id.equals(specificList.owner._id)) { %>
             <p style="display: inline-block;" class="card-text show-pc">Owned by <i><%= specificList.owner.username %></i></p> &nbsp; &nbsp; &nbsp;  <a class="float-end book-now-button"  href="/<%= specificList.id %>/booking">Reserve</a> 
-            <a class="float-end book-now-button chat-btn " style="margin-right: 3px; cursor: pointer;"  data-hostid="<%= specificList.owner._id %>"  id="chatWithHost">Chat with Host</a>
+            <a class="float-end book-now-button chat-btn d-md-mr-1  " style="cursor: pointer;"  data-hostid="<%= specificList.owner._id %>"  id="chatWithHost">Chat with Host</a>
             <% } %>
-            <p class="card-text show-pc"> <%= specificList.description %> </p>
+            <p class="card-text description show-pc"> <%= specificList.description %> </p>
               <p class="card-text show-pc">  &#8377;<%= specificList.price.toLocaleString("en-IN") %></p>
               <p class="card-text show-pc"> <%= specificList.location %></p>
               <p class="card-text show-pc"> <%= specificList.country %> </p>
@@ -97,7 +97,7 @@ let listing = <%- JSON.stringify(specificList) %>; //ask chatgpt || ejs is purel
     
   </div>  
   <div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-12  map ">
+    <div class="col-lg-6 col-md-8 col-sm-12   map ">
       <h3>Where you'll be</h3>
       <div id="map" class="mt-3"></div>
          <br><br>  

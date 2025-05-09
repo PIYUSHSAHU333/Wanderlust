@@ -5,7 +5,7 @@
 <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1 mt-3">
     <% for(let booking of myBookings) {%>
         
-          <div class="Listingcard card col">
+          <div class="Listingcard card ">
             <a href="/listings/<%= booking.Listing._id %>" style="color: black;" class="listClick">
               <img src="<%= booking.Listing.image.url %>" class="card-img-top" alt="..." style=" width: 10rem; height: 15rem;">
               <div class="card-img-overlay">

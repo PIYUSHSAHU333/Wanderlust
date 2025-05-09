@@ -7,10 +7,22 @@
         <div class="list-group mt-4" >
             <% chatRoom.forEach(room => { %>
                 
-                    <div class="list-group-item d-flex justify-content-between chatRoombox align-items-center" style="cursor: pointer; border-radius: 20px; background-color: lightblue; width: 500px; border: solid 2px black;">
+                    <div class="list-group-item d-md-flex d-none justify-content-between chatRoombox align-items-center" style="cursor: pointer; border-radius: 20px; background-color: lightblue; width: 500px; border: solid 2px black;">
                     <h5><%= room.userAId._id.toString() == currUser.toString() ? room.userBId.username : room.userAId.username %></h5>
                         <a href="/chats/<%= room.roomId %>" class="btn chat-btn " style="background-color: #fe424d; color: white; border-radius: 20px;">Chat</a>
                     </div>
+
+                    <div class="list-group-item chatRoombox d-block d-sm-none" style="cursor: pointer; border-radius: 20px; background-color: lightblue; border: solid 2px black;">
+                        <div class="row">
+                            <div class="col-12">
+                                <h5><%= room.userAId._id.toString() == currUser.toString() ? room.userBId.username : room.userAId.username %></h5>
+                            </div>
+                            <div class="col-12">
+                                <a href="/chats/<%= room.roomId %>" class="btn chat-btn" style="background-color: #fe424d; color: white; border-radius: 20px; width: 100%;">Chat</a>
+                            </div>
+                        </div>
+                    </div>
+             
                 
                 <br>
             <% }); %>

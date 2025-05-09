@@ -40,7 +40,6 @@ body{
     border-radius: 50px !important;
     opacity: 0.85 !important;
     padding-left: 2px;
-    
     border: solid 2px black !important;
     position: relative !important;
     top: 1px !important;
@@ -55,7 +54,8 @@ body{
 }
 
 /* dropdown-menu */
-.dropdown-menu{
+
+.dropDownMenustyle{
     transform: translateX(-150px) !important; 
     width: 220px !important;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -215,9 +215,7 @@ body{
     display: flex !important;
 }
 
-@media screen and (max-width: 772px) {
-    
-}
+
 
 .btns-show a:hover{
     background-color: #222222 !important;
@@ -245,7 +243,25 @@ body{
     align-items: start;
     margin-left: 280px;
 }
+@media (max-width: 768px) {
+    .map{
+        margin-left: 0px;
+    }
+    .chat-btn{
+        padding-inline: 3px !important;
+        margin-right: 2px;
+        font-size: 12px;
+    }
+    .book-now-button{
+        padding-inline: 3px !important;
+        font-size: 12px;
+    }
+   
+}
 
+.priceDisplay{
+    width: 25%; max-width: 460px; height: 50px;
+}
  /* marker-popup */
 
 /* Remove default white background */

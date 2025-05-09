@@ -1,5 +1,50 @@
-
 <style>
+  @media (max-width: 768px) {
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      top: auto;
+      width: 100%;
+      z-index: 1030;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .dropdown-menu {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      margin-right: 10px !important;
+    }
+    .navbar .search-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: white;
+      padding: 10px;
+      z-index: 1040;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .navbar-collapse {
+      background-color: white;
+      position: absolute;
+      bottom: 100%;
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    .navbar-nav {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-left: 1rem;
+    }
+  }
+
+  .searchInput {
+    border-radius: 20px !important;
+    padding: 7px !important;
+    width: 220px !important;
+    margin-right: 7px !important;
+  }
   .search-btn {
     background: linear-gradient(135deg, #fe424d, #ff3e75, #ff6e7f);
     color: white;
@@ -11,94 +56,249 @@
     color: white;
     border-radius: 2rem;
     box-shadow: 2px 3px 5px rgba(255, 118, 158, 0.8);
-    
   }
-   
-  .search-btn i{
+
+  .search-btn i {
     margin-right: 0.4rem;
   }
-  .search-inp{
+  .search-inp {
     border-radius: 2rem;
     padding: 0.5rem 3rem 0.5rem 3rem;
     box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2);
   }
-  .search-inp:hover{
+  .search-inp:hover {
     box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
   }
-
+  .mobileNav {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    width: 100%;
+    z-index: 1030;
+    border-top: 1px solid #dee2e6;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
 </style>
 
-<nav class="navbar  navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
-      <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" >
-        <span class="navbar-toggler-icon "></span>
-      </button>
-      <div class="collapse navbar-collapse collapse1" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link" href="/listings">Explore</a>
-        </div>
+<div
+  class="mobile-search-bar d-flex d-md-none sticky-top bg-white p-2 border-bottom"
+>
+  <form class="d-flex" id="searchBar2" action="/listings/search" method="get">
+    <input
+      class="form-control flex-grow-1 searchInput px-0"
+      type="search"
+      placeholder="Search Destinations"
+      name="searchquery"
+      id="searchquery2"
+    />
+    <button class="btn searcBtn2" type="submit">
+      <i class="fa-solid fa-magnifying-glass" style="display: inline"></i>
+    </button>
+  </form>
+  <div class="dropdown" style="z-index: 3500; position: absolute; right: 1px">
+    <button
+      class="btn custom-dropdown-btn dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      <i class="fa-solid fa-user"></i> &nbsp; &nbsp;
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <ul
+      class="dropdown-menu w-100"
+      style="
+        z-index: 3500 !important;
+        position: absolute !important;
+        right: 10px;
+      "
+    >
+      <% if(!currUser) { %>
+      <li>
+        <a class="nav-link m-2" href="/signup"><b>Sign Up</b></a>
+      </li>
+      <li>
+        <a class="nav-link m-2" href="/login"><b>Log in</b></a>
+      </li>
+      <% } else { %>
+      <li>
+        <a class="nav-link m-2" href="/logout"><b>Log out</b></a>
+      </li>
 
+      <% } %>
+      <hr />
+      <li><a class="nav-link m-2" href="/listings/new">List your home</a></li>
+      <li><a class="nav-link m-2" href="/notification">Notifications</a></li>
+      <li><a class="nav-link m-2" href="/chats/messages">Messages</a></li>
+      <li>
+        <a href="/listings/myBookings" class="nav-link m-2">My bookings</a>
+      </li>
+      <li>
+        <a class="nav-link m-2" href="/listings/wishlist">Your wishlist</a>
+      </li>
+      <li><a class="nav-link m-2" href="/account">Account</a></li>
+      <hr />
+      <li>
+        <a class="nav-link m-2" href="/listings/helpCenter">Help Centre</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
-        <div class="navbar-nav ms-auto ">
-          <form class="d-flex" id="searchBar" role="search" action="/listings/search" method="get">
-            <input class="form-control me-2 search-inp" id="searchquery" type="search" placeholder="Search Destinations" aria-label="Search">
-            <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass " style="display: inline;"></i >Search</button>
-          </form>
-        </div>
+<nav>
+  <div
+    class="mobileNav d-flex justify-content-evenly align-items-center d-md-none"
+  >
+    <a class="navbar-brand" href="/listings"
+      ><i class="fa-regular fa-compass"></i
+    ></a>
+    <a class="nav-link" href="/listings/new"
+      ><i class="fa-solid fa-house-user fa-2x"></i
+    ></a>
 
+    <a class="bellIcon nav-link" href="/notification">
+      <span
+        id="notificationCount"
+        style="font-size: 12px; position: relative; bottom: 5px"
+        >0</span
+      ><i class="fa-solid fa-bell fa-2x"></i
+    ></a>
+    <a href="/listings/myBookings" class="nav-link">
+      <i class="fa-solid fa-calendar-days fa-2x"></i>
+    </a>
+  </div>
+</nav>
 
-        <div class="navbar-nav ms-auto">
-          <a class=" bellIcon nav-link " href="/notification" > <span id="notificationCount" style="font-size: 12px; position: relative; bottom: 5px;" >0</span><i class="fa-solid fa-bell"></i></a>
-          <a class="nav-link" href="/listings/new">List your home</a>
-          <a href="/listings/myBookings" class="nav-link">My bookings</a>
+<nav
+  class="navbar navbar-expand-md d-none d-md-flex bg-body-light border-bottom sticky-top"
+>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings"
+      ><i class="fa-regular fa-compass"></i
+    ></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse collapse1" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div>
+      <!-- searchbar -->
+      <div class="navbar-nav ms-auto d-none d-md-flex">
+        <form
+          class="d-flex search-bar"
+          id="searchBar"
+          role="search"
+          action="/listings/search"
+          method="get"
+        >
+          <input
+            class="form-control me-2 search-inp"
+            id="searchquery"
+            type="search"
+            placeholder="Search Destinations"
+            aria-label="Search"
+          />
+          <button class="btn search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass" style="display: inline"></i
+            >Search
+          </button>
+        </form>
+      </div>
 
-          <div class="dropdown" style="z-index: 3500;">
-            <button class="btn custom-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa-solid fa-user"></i> &nbsp; &nbsp;  <i class="fa-solid fa-bars"></i>
-            </button>
-            <ul class="dropdown-menu" style="z-index: 3500 !important; position: absolute !important;">
-              
-              <% if(!currUser) {   %>
-                <li><a class="nav-link active" href="/signup"><b>Sign Up</b></a></li>
-                <li><a class="nav-link" href="/login"><b>Log in</b></a></li>
-                <% } else { %> 
-                <li><a class="nav-link" href="/logout"><b>Log out</b></a></li>
-                <% } %> <hr>
-                <li><a class="nav-link" href="/listings/new">List your home</a></li>
-                <li><a class="nav-link" href="/notification">Notifications</a></li>
-                <li><a class="nav-link" href="/chats/messages">Messages</a></li>
-                <li><a class="nav-link" href="/listings/wishlist">Your wishlist</a></li>
-                <li><a class="nav-link" href="/account">Account</a></li>
-                <hr>
-                <li><a class="nav-link" href="/listings/helpCenter">Help Centre</a></li>
-            </ul>
-          </div>
+      <div class="navbar-nav ms-auto">
+        <a class="bellIcon nav-link" href="/notification">
+          <span
+            id="notificationCount"
+            style="font-size: 12px; position: relative; bottom: 5px"
+            >0</span
+          ><i class="fa-solid fa-bell"></i
+        ></a>
+        <a class="nav-link" href="/listings/new">List your home</a>
+        <a href="/listings/myBookings" class="nav-link">My bookings</a>
 
-
-          
+        <div class="dropdown d-none d-md-block" style="z-index: 3500">
+          <button
+            class="btn custom-dropdown-btn dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-solid fa-user"></i> &nbsp; &nbsp;
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <ul
+            class="dropdown-menu dropDownMenustyle"
+            style="z-index: 3500 !important; position: absolute !important"
+          >
+            <% if(!currUser) { %>
+            <li>
+              <a class="nav-link active" href="/signup"><b>Sign Up</b></a>
+            </li>
+            <li>
+              <a class="nav-link" href="/login"><b>Log in</b></a>
+            </li>
+            <% } else { %>
+            <li>
+              <a class="nav-link" href="/logout"><b>Log out</b></a>
+            </li>
+            <% } %>
+            <hr />
+            <li><a class="nav-link" href="/listings/new">List your home</a></li>
+            <li><a class="nav-link" href="/notification">Notifications</a></li>
+            <li><a class="nav-link" href="/chats/messages">Messages</a></li>
+            <li>
+              <a class="nav-link" href="/listings/wishlist">Your wishlist</a>
+            </li>
+            <li><a class="nav-link" href="/account">Account</a></li>
+            <hr />
+            <li>
+              <a class="nav-link" href="/listings/helpCenter">Help Centre</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <script>
-
-    document.getElementById("searchBar").addEventListener("submit", async(event)=>{
+<script>
+  document
+    .getElementById("searchBar")
+    .addEventListener("submit", async (event) => {
       event.preventDefault();
-
       let query = document.getElementById("searchquery").value;
-      if(!query){
+      console.log("searchquery:", query);
+      if (!query) {
+        console.log("no query:", query);
         return;
-      }else{
-      window.location.href = `/listings/search?query=${encodeURIComponent(query)}`;
+      } else {
+        window.location.href = `/listings/search?query=${encodeURIComponent(
+          query
+        )}`;
+        console.log("queryis", query);
       }
-    })
-    
-  
-
-   
-   
-
-
-  </script>
+    });
+  document
+    .getElementById("searchBar2")
+    .addEventListener("submit", async (event) => {
+      event.preventDefault();
+      let query = document.getElementById("searchquery2").value;
+      console.log("searchquery:", query);
+      if (!query) {
+        console.log("no query:", query);
+        return;
+      } else {
+        window.location.href = `/listings/search?query=${encodeURIComponent(
+          query
+        )}`;
+        console.log("queryis", query);
+      }
+    });
+</script>

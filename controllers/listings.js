@@ -1,10 +1,10 @@
 const { model } = require("mongoose");
-const Listing = require("../models/listing");
-const User = require("../models/users");
+const Listing = require("../models/listing.js");
+const User = require("../models/users.js");
 const geocoding = require("@mapbox/mapbox-sdk/services/geocoding"); //requiring geocodingg service from sk package which we downloaded
 const geocodingClient =  geocoding({ accessToken: process.env.MAP_TOKEN }); //connects service(i.e geocoding here) with api of mapbox
-const Booking = require("../models/booking");
-const sendNotification = require("../utils/notifiation");
+const Booking = require("../models/booking.js");
+const sendNotification = require("../utils/notifiation.js");
 module.exports.index = async (req, res)=>{
     let allListings = await Listing.find({})
     let currUser = null;
@@ -128,6 +128,7 @@ module.exports.filter = async (req, res)=>{
     res.render("listings/filters.ejs", {filteredListings});
 }
 module.exports.search = async(req, res)=>{
+    console.log(req.query);
     let {query} = req.query;
     let listings = await Listing.find({
         $or: [
@@ -136,7 +137,7 @@ module.exports.search = async(req, res)=>{
             {description: {$regex: query, $options: 'i'}}
         ],
     });
-    // console.log("------------Triggered", listings, "-------------Triggered")
+    console.log("------------Triggered", listings, "-------------Triggered")
     res.render("listings/searchedListing.ejs", {listings}); 
 }
 module.exports.currentBooking = async(req, res)=>{

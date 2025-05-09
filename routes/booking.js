@@ -5,7 +5,7 @@ const {isLoggedin, isOwner, validateBooking} = require("../middlewares.js");
 const Booking = require("../models/booking.js");
 const Listing = require("../models/listing.js");
 const {sendMail, formatTimeDate} = require("../utils/mail.js");
-
+const sendNotification = require("../utils/notifiation.js")
 
 router.route("/")
 .get(isLoggedin,asyncWrap(async(req, res)=>{

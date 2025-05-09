@@ -8,8 +8,8 @@ const mongoose = require("mongoose");
 const Message = require("../models/messages.js")
 const ChatRoom = require("../models/chatRoom.js");
 
-router.get("/messages", asyncWrap(async(req, res)=>{
-    const currUser = res.locals.currUser._id;
+router.get("/messages", isLoggedin, asyncWrap(async(req, res)=>{
+    const currUser =  res.locals.currUser._id;
     const chatRoom =await  ChatRoom.find({
         $or: [
             {userAId: res.locals.currUser._id},

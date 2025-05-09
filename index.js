@@ -148,8 +148,7 @@ app.use(express.urlencoded({ extended: true })); //parses url encoded data from 
 app.use(express.json()); //helps in having json format data into req.body!
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "/public"), { maxAge: '1d' }));
 
 //-----------------------------------------
 main()
